@@ -1,4 +1,5 @@
-import hashlib
+#import hashlib
+from gmssl import *
 
 
 def Hash(data: any) -> int:
@@ -9,10 +10,10 @@ def Hash(data: any) -> int:
     """
     if isinstance(data, str):
         data = data.encode('utf-8')
-    sha256_hash = hashlib.new('sha256')
-    sha256_hash.update(data)
-    data_hash = sha256_hash.hexdigest()  # 16进制字符串
-    data_hash = int(data_hash, 16)
+    sm3_hash = Sm3()
+    sm3_hash.update(data)
+    data_hash = sm3_hash.digest()
+    data_hash = int(data_hash.hex(), 16)
     return data_hash
 
 
@@ -28,8 +29,14 @@ def two_hashed_OPRF(key: int, data_1: str, data_2: int, p: int) -> str:
     temp_data = pow(data_2, key, p)   # 临时的数据，data_2的key次方
     data = data_1 + str(temp_data)    # 字符串拼接
     data = data.encode('utf-8')
-    sha256_hash = hashlib.new('sha256')
-    sha256_hash.update(data)
-    data_hash = sha256_hash.hexdigest()  # 16进制字符串
-    return data_hash
+    sm3_hash = Sm3()
+    sm3_hash.update(data)
+    data_hash = sm3_hash.digest()
+    res=bytearray(16)
+    for i in range(16):
+        res[i]=data_hash[i]^data_hash[i+16]
+    assert(len(res),16)
+    return res.hex()
 
+if __name__=='__main__':
+    two_hashed_OPRF(12322,"fdwsafwsae",74893271984732,79878)

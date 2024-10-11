@@ -1,8 +1,11 @@
+
+from common import aes
+from common import SM4
+from common import oprf
+from common import curve_ed25519 as _curve
 import random
-import aes
-import oprf
 import generate_qr as QR
-import curve_ed25519 as _curve
+
 
 
 class Iot:
@@ -13,8 +16,8 @@ class Iot:
     private_key = 2024
     public_key = private_key * generator_point
 
-    # 生成AES加解密方案
-    AES = aes.Aes(16)
+    # 生成对称加解密方案
+    SysmCipher = SM4()
 
     def create_QR(self) -> str:
         """
@@ -49,23 +52,24 @@ class Iot:
 
     def compute_cipher(self, message, key: bytes) -> bytes:
         """
-        AES加密，计算密文
+        对称加密，计算密文
         :param message: 待加密明文,椭圆曲线上的点
         :param key: 加密密钥
         :return:
         """
-        cipher_iot = self.AES.EnCrypt(key, self.curve.to_bytes(message))
+        messageBytes=self.curve.to_bytes(message)
+        cipher_iot = self.SysmCipher.EnCrypt(key, messageBytes)
         return cipher_iot
 
     def DeCrypt(self, public_key_iots, cipher: bytes, key: bytes):
         """
-        AES解密
+        对称解密
         :param public_key_iots:
         :param cipher: IoT接收到的密文
         :param key: 解密密钥
         :return:
         """
-        decryptTest = self.AES.DeCrypt(key, cipher)
+        decryptTest = self.SysmCipher.DeCrypt(key, cipher)
         return self.curve.from_bytes(decryptTest)            # 椭圆曲线上的点
 
     def random_data_mark(self):

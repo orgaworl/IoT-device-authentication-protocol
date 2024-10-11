@@ -1,6 +1,5 @@
 import socket
-import iot
-
+import clientAction
 
 def Protocol_Iot(HOST: str, port: int) -> None:
     """
@@ -10,7 +9,7 @@ def Protocol_Iot(HOST: str, port: int) -> None:
     :return:
     """
     # 系统初始化
-    IoT = iot.Iot()
+    IoT = clientAction.Iot()
     # 创建socket对象
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 连接到服务器
@@ -56,7 +55,8 @@ def Protocol_Iot(HOST: str, port: int) -> None:
 
 if __name__ == '__main__':
     # 如有问题，可以修改端口号
-    HOST = input("请输入移动设备的IP地址:")
+    #HOST = input("请输入移动设备的IP地址:")
+    HOST="127.0.0.1"
     port = 4398
     Protocol_Iot(HOST, port)
 

@@ -2,10 +2,11 @@ import random
 from Crypto.Util.number import *
 
 
-import aes
-import get_random_num
-import oprf
-import curve_ed25519 as _curve
+from common import aes
+from common import SM4
+from common import get_random_num
+from common import oprf
+from common import curve_ed25519 as _curve
 
 
 class IoT_Control:
@@ -18,8 +19,8 @@ class IoT_Control:
     private_key = 4046
     public_key = private_key * generator_point
 
-    # 生成AES加解密方案
-    AES = aes.Aes(16)
+    # 生成SysmCipher加解密方案
+    SysmCipher = SM4()
 
     def generate_alpha(self, QR_string: str) -> (str, int):
         """
@@ -45,8 +46,8 @@ class IoT_Control:
         """
         r_inverse = inverse(r, self.order - 1)
         key = oprf.two_hashed_OPRF(r_inverse, QR_string, beta, self.order)
-        decryptTest = self.AES.DeCrypt(key.encode(), cipher_iot)
-        cipher_iots = self.AES.EnCrypt(key.encode(), self.curve.to_bytes(public_key_iots))
+        decryptTest = self.SysmCipher.DeCrypt(key.encode(), cipher_iot)
+        cipher_iots = self.SysmCipher.EnCrypt(key.encode(), self.curve.to_bytes(public_key_iots))
         return cipher_iots, self.curve.from_bytes(decryptTest), key
 
     def random_data_mark(self):
