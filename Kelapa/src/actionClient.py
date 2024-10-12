@@ -1,10 +1,10 @@
 
-from common import aes
 from common import SM4
 from common import oprf
 from common import curve_ed25519 as _curve
+from common import generate_qr as QR
 import random
-import generate_qr as QR
+
 
 
 
@@ -19,12 +19,12 @@ class Iot:
     # 生成对称加解密方案
     SysmCipher = SM4()
 
-    def create_QR(self) -> str:
+    def create_QR(self,passwd: str) -> str:
         """
         产生动态二维码，输出二维码的字符串解析
         :return:
         """
-        QR_name = QR.get_qr()   # 二维码名字, 可以查看二维码图片
+        QR_name = QR.get_qr(passwd)   # 二维码名字, 可以查看二维码图片
         QR_string = QR.trans_bytes(QR_name)
         return QR_string
 

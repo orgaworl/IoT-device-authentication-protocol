@@ -1,5 +1,5 @@
 import socket
-import IoT_main
+import action_server
 
 
 def Protocol_Iots(HOST: str, port: int) -> bool:
@@ -10,7 +10,7 @@ def Protocol_Iots(HOST: str, port: int) -> bool:
     :return:
     """
 
-    IoTs = IoT_main.IoT_Control()
+    IoTs = action_server.IoT_Control()
     # 建立socket连接
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 端口号复用

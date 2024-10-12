@@ -20,13 +20,21 @@
 
 安卓手机，提前安装termux。
 
-python3.9及以上
+```shell
+termux-setup-storage
+```
+
+
+
+安装所需依赖
+
+```shell
+pkg install python openssl openssh mpc ninja cmake
+```
 
 ### 运行的注意事项
 
 本文件下载到手机中，模拟协议的执行过程。请确保project文件代码所在的PC端和本文件所在的手机属于同一个局域网。
-
-
 
 如果运行后提示
 
@@ -65,7 +73,3 @@ python iot_client.py
 ### 第四步
 
 在PC端输入移动设备的IP地址。
-
-
-
-

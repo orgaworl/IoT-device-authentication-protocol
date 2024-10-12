@@ -1,8 +1,6 @@
 import random
 from Crypto.Util.number import *
 
-
-from common import aes
 from common import SM4
 from common import get_random_num
 from common import oprf

@@ -1,8 +1,8 @@
 import random
-import aes
-import SHA256
-import sign_verfy as sv
-import curve_ed25519 as _curve
+from common import SM4
+from common import SM3HashComp
+from common import sign_verfy as sv
+from common import curve_ed25519 as _curve
 
 
 class IoT_Control:
@@ -16,14 +16,14 @@ class IoT_Control:
     public_key_iots = sv.gen_public_key(public_key)
 
     # 生成AES加解密方案
-    AES = aes.Aes(16)
-
+    SysmCipher =SM4()
+    HashFunc=SM3HashComp()
     def compute_x(self, QR_salt: str) -> int:
         """
         计算x
         :return:
         """
-        x = SHA256.Hash(QR_salt)
+        x = self.HashFunc.Hash(QR_salt)
         return x
 
     def compute_B(self, x):
@@ -49,7 +49,7 @@ class IoT_Control:
         temp = self.curve.mul(x*u, self.generator_point)
         s = self.curve.add(A, temp)
         S = self.curve.mul(b, s)
-        K = SHA256.Hash(self.curve.to_bytes(S))
+        K = self.HashFunc.Hash(self.curve.to_bytes(S))
         return K
 
     def random_data(self):
@@ -71,7 +71,7 @@ class IoT_Control:
         :return:
         """
         _M1 = self.curve.to_bytes(A) + self.curve.to_bytes(B) + str(K).encode('utf-8')
-        _M1 = SHA256.Hash(_M1)
+        _M1 = self.HashFunc.Hash(_M1)
         if (M1 != _M1):
             print("FAULT!!!")
             return False
@@ -85,7 +85,7 @@ class IoT_Control:
         :param K:
         :return:
         """
-        return SHA256.Hash(self.curve.to_bytes(A) + str(M1).encode("UTF-8") + str(K).encode('utf-8'))
+        return self.HashFunc.Hash(self.curve.to_bytes(A) + str(M1).encode("UTF-8") + str(K).encode('utf-8'))
 
     def decrypt(self, K: int, cipher: bytes):
         """
@@ -94,8 +94,8 @@ class IoT_Control:
         :param cipher: 接收到的密文
         :return:
         """
-        key = self.AES.PadKey(str(K).encode())
-        decryptTest = self.AES.DeCrypt(key, cipher)
+        key = self.SysmCipher.PadKey(str(K).encode())
+        decryptTest = self.SysmCipher.DeCrypt(key, cipher)
         return self.curve.from_bytes(decryptTest)
 
     def encrypt(self, K, public_key):
@@ -105,10 +105,11 @@ class IoT_Control:
         :param public_key: IoT设备的身份标识公钥
         :return:
         """
-        key = self.AES.PadKey(str(K).encode())
-        cipher_iot = self.AES.EnCrypt(key, self.curve.to_bytes(public_key))
+        key = self.SysmCipher.PadKey(str(K).encode())
+        cipher_iot = self.SysmCipher.EnCrypt(key, self.curve.to_bytes(public_key))
         return cipher_iot
-
+    
+    
     def compute_ssk(self, y, Z):
         """
         计算会话密钥
@@ -130,8 +131,8 @@ class IoT_Control:
         :param public_key_iot:
         :return:
         """
-        key = self.AES.PadKey(ssk)
-        decryptTest = self.AES.DeCrypt(key, cipher)
+        key = self.SysmCipher.PadKey(ssk)
+        decryptTest = self.SysmCipher.DeCrypt(key, cipher)
         Z = self.curve.from_bytes(Z)
         m = self.curve.add(Z, Y)
         message = self.curve.to_bytes(m)
@@ -150,8 +151,8 @@ class IoT_Control:
         m = self.curve.add(Y, Z)
         message = self.curve.to_bytes(m)
         sign = sv.sign(message, self.private_key_iots)
-        key = self.AES.PadKey(ssk)
-        cipher = self.AES.EnCrypt(key, sign)
+        key = self.SysmCipher.PadKey(ssk)
+        cipher = self.SysmCipher.EnCrypt(key, sign)
         return cipher
 
 

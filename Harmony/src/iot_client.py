@@ -1,5 +1,5 @@
 import socket
-import iot
+import action_client
 
 
 def Protocol_Iot(HOST: str, port: int) -> bool:
@@ -10,7 +10,7 @@ def Protocol_Iot(HOST: str, port: int) -> bool:
     :return:
     """
     # 系统初始化
-    IoT = iot.Iot()
+    IoT = action_client.Iot()
     # 创建socket对象
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 连接到服务器

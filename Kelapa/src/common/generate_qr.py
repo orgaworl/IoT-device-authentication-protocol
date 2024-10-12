@@ -23,22 +23,17 @@ def get_qr_code_image(data: str) -> str:
         # 用时间戳命名文件
         filename = 'test_QR.png'
         img.save(filename)
-        print(f"二维码{filename}生成成功\n")
         return filename
     except Exception as e:
-        print(f"生成失败：{e}")
+        return ""
 
 
-def get_qr() -> str:
+def get_qr(passwd: str) -> str:
     """
     生成动态二维码
     filename:二维码文件名字
     """
-    random_number = random.randint(0, 4)
-    List_Data = ['https://douyin.com', 'https://baidu.com', 'https://kuaishou.com', 'https://zhihu.com',
-                 'https://weibo.com']
-    QR_Data = List_Data[random_number]
-    filename = get_qr_code_image(QR_Data)
+    filename = get_qr_code_image(passwd)
     return filename
 
 

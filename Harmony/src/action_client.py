@@ -1,9 +1,9 @@
 import random
-import SHA256
-import aes
-import sign_verfy as sv
-import generate_qr as QR
-import curve_ed25519 as _curve
+from common import SM4
+from common import SM3HashComp
+from common import sign_verfy as sv
+from common import curve_ed25519 as _curve
+from common import generate_qr as QR
 
 
 class Iot:
@@ -17,8 +17,8 @@ class Iot:
     public_key_iot = sv.gen_public_key(public_key)
 
     # 生成AES加解密方案
-    AES = aes.Aes(16)
-
+    SysmCipher = SM4()
+    HashFunc=SM3HashComp()
     def create_QR(self) -> str:
         """
         产生动态二维码，输出二维码的字符串解析
@@ -56,10 +56,10 @@ class Iot:
         :param QR: 二维码
         :return:
         """
-        x = SHA256.Hash(QR + salt)
+        x = self.HashFunc.Hash(QR + salt)
         S = self.curve.sub(B, x * self.generator_point)
         S = self.curve.mul(a + u * x, S)
-        K = SHA256.Hash(self.curve.to_bytes(S))
+        K = self.HashFunc.Hash(self.curve.to_bytes(S))
         return K
 
     def compute_M1(self, A, B, K):
@@ -70,7 +70,7 @@ class Iot:
         :param K:
         :return:
         """
-        return SHA256.Hash(self.curve.to_bytes(A) + self.curve.to_bytes(B) + str(K).encode('utf-8'))
+        return self.HashFunc.Hash(self.curve.to_bytes(A) + self.curve.to_bytes(B) + str(K).encode('utf-8'))
 
     def verfy_M2(self, A, M1, K, M2):
         """
@@ -82,7 +82,7 @@ class Iot:
         :return:
         """
         _M2 = self.curve.to_bytes(A) + str(M1).encode("UTF-8") + str(K).encode('utf-8')
-        _M2 = SHA256.Hash(_M2)
+        _M2 = self.HashFunc.Hash(_M2)
         if (M2 != _M2):
             print("FAULT!!!")
             return False
@@ -95,8 +95,8 @@ class Iot:
         :param public_key: IoT设备的身份标识公钥
         :return:
         """
-        key = self.AES.PadKey(str(K).encode())
-        cipher_iot = self.AES.EnCrypt(key, self.curve.to_bytes(public_key))
+        key = self.SysmCipher.PadKey(str(K).encode())
+        cipher_iot = self.SysmCipher.EnCrypt(key, self.curve.to_bytes(public_key))
         return cipher_iot
 
     def decrypt(self, K: int, cipher: bytes):
@@ -106,8 +106,8 @@ class Iot:
         :param cipher: 接收到的密文
         :return:
         """
-        key = self.AES.PadKey(str(K).encode())
-        decryptTest =self.AES.DeCrypt(key, cipher)
+        key = self.SysmCipher.PadKey(str(K).encode())
+        decryptTest =self.SysmCipher.DeCrypt(key, cipher)
         return self.curve.from_bytes(decryptTest)
 
     def compute_ssk(self, z, Y):
@@ -133,8 +133,8 @@ class Iot:
         m = self.curve.add(Z, Y)
         message = self.curve.to_bytes(m)
         sign = sv.sign(message, self.private_key_iot)
-        key = self.AES.PadKey(ssk)
-        cipher = self.AES.EnCrypt(key, sign)
+        key = self.SysmCipher.PadKey(ssk)
+        cipher = self.SysmCipher.EnCrypt(key, sign)
         return cipher
 
     def dec_vrfy(self, cipher, ssk, Z, Y, public_key_iots):
@@ -147,8 +147,8 @@ class Iot:
         :param public_key_iots:
         :return:
         """
-        key = self.AES.PadKey(ssk)
-        decryptTest = self.AES.DeCrypt(key, cipher)
+        key = self.SysmCipher.PadKey(ssk)
+        decryptTest = self.SysmCipher.DeCrypt(key, cipher)
         Y = self.curve.from_bytes(Y)
         m = self.curve.add(Y, Z)
         message = self.curve.to_bytes(m)
