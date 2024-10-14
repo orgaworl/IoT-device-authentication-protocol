@@ -1,6 +1,6 @@
 # self config
-*test_QR.png
-
+*/test_QR.png
+*/node_modules
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
