@@ -1,6 +1,6 @@
 import socket
 import actionServer
-
+import sys, getopt
 def Protocol_Iots(HOST: str, port: int) -> None:
     """
     IoT主控设备参与协议的运行
@@ -55,7 +55,20 @@ def Protocol_Iots(HOST: str, port: int) -> None:
 
 
 if __name__ == '__main__':
-    # 如有问题，修改端口号
-    HOST = "127.0.0.1"
-    Port = 4398
-    Protocol_Iots(HOST, Port)
+    try:
+        argv=sys.argv[1:]
+        opts, args = getopt.getopt(argv,"h",["ip=","port="])
+    except getopt.GetoptError:
+        print('progServer.py --ip <ip> --port <port>')
+    HOST="127.0.0.1"
+    port = 4398
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print("progServer.py --ip <ip> --port <port>")
+            sys.exit()
+        elif opt in ("--ip"):
+            HOST=arg
+        elif opt in ("--port"):
+            port=arg
+    Protocol_Iots(HOST, port)

@@ -1,3 +1,0 @@
-ECPy==1.2.5
-pycryptodome==3.16.0
-pycryptodomex==3.16.0

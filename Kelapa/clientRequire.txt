@@ -1,7 +1,0 @@
-ECPy==1.2.5
-gmpy2==2.1.4
-numpy==1.14.5
-opencv_python==4.9.0.80
-pycryptodomex==3.16.0
-pyzbar==0.1.9
-qrcode==7.4.2

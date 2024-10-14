@@ -52,6 +52,7 @@ def Protocol_Iot(HOST: str, port: int,passwd:str) -> None:
     print(f"[key] IoT设备最终协商的会话密钥:\n[val] {hex(ssk)}")
     # 关闭连接
     socket_client.close()
+    
 
 
 if __name__ == '__main__':
@@ -62,7 +63,7 @@ if __name__ == '__main__':
         print('progClient.py --ip <ip> --port <port> --passwd <password>')
     HOST="127.0.0.1"
     port = 4398
-    passwd="this is default passwd"
+    passwd="passwd"
     for opt, arg in opts:
         if opt == '-h':
             print("progClient.py --ip <ip> --port <port> --passwd <password>")
@@ -73,8 +74,10 @@ if __name__ == '__main__':
             port=arg
         elif opt in ("--passwd"):
             passwd=arg
-    
-    Protocol_Iot(HOST, port,passwd)
+    try:
+        Protocol_Iot(HOST, int(port),passwd)
+    except socket.error:
+        print("[ERR] socket Error")
 
 
 

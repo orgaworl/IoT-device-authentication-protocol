@@ -20,17 +20,7 @@
 
 安卓手机，提前安装termux。
 
-```shell
-termux-setup-storage
-```
 
-
-
-安装所需依赖
-
-```shell
-pkg install python openssl openssh mpc ninja cmake
-```
 
 ### 运行的注意事项
 

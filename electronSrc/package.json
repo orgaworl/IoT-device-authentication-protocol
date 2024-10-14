@@ -1,0 +1,17 @@
+{
+  "name": "protocal_front_end",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "orgaworl",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "electron": "^32.2.0"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2"
+  }
+}
