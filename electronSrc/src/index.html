@@ -4,17 +4,16 @@
         <meta charset="UTF-8" />
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
-        />
+            content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
         <link href="style.css" rel="stylesheet" />
-        <title>Disk Space Visualizer</title>
+        <title>IoT Device Authentication</title>
     </head>
 
     <body>
         <header>
             <div class="title-bar">
                 <div class="title">
-                    <p>Disk Space Visualizer</p>
+                    <p>IoT Device Authentication</p>
                 </div>
 
                 <div class="menu-items">
@@ -22,24 +21,21 @@
                         <img
                             id="option-minimize"
                             src="../img/minus_icon_246303.png"
-                            width="20px"
-                        />
+                            width="20px" />
                     </div>
 
                     <div class="menu-item">
                         <img
                             id="option-maximize"
                             src="../img/checkbox_empty_icon_246490.png"
-                            width="20px"
-                        />
+                            width="20px" />
                     </div>
 
                     <div class="menu-item">
                         <img
                             id="option-close"
                             src="../img/cross_icon_246446.png"
-                            width="20px"
-                        />
+                            width="20px" />
                     </div>
                 </div>
             </div>
@@ -47,7 +43,6 @@
             <div class="option-bar">
                 <div class="options">
                     <ol style="padding-left: 10px">
-                        <li id="option-file" class="option">File</li>
                         <li class="option">Help</li>
                         <li class="option">About</li>
                     </ol>
@@ -57,70 +52,80 @@
 
         <main>
             <!-- config-box -->
-            <div>
-                <div><h2>认证方参数</h2></div>
-                <div class="config-box">
-                    <form action="#" id="config">
-                        <div class="flex-space-between">
-                            <div class="div-font-box">
-                                <label for="host">ip</label>
+            <div id="above-box">
+                <div>
+                    <div><h2>认证方参数</h2></div>
+                    <div class="config-box">
+                        <form action="#" id="config">
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="host">ip</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input type="text" id="config-host"
+                                        placeholder="127.0.0.1" />
+                                </div>
                             </div>
-                            <div class="div-font-box">
-                                <input type="text" id="config-host" />
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="port">port</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input type="text" id="config-port"
+                                        placeholder="4398" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex-space-between">
-                            <div class="div-font-box">
-                                <label for="port">port</label>
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="passwd">passwd</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input type="text" id="config-passwd"
+                                        placeholder="passwd" />
+                                </div>
                             </div>
-                            <div class="div-font-box">
-                                <input type="text" id="config-port" />
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label>display plaintext</label>
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    role="switch"
+                                    aria-checked="false"
+                                    aria-disabled="false"
+                                    name
+                                    true-value="true"
+                                    false-value="false"
+                                    style="display: inline" />
                             </div>
-                        </div>
-                        <div class="flex-space-between">
-                            <div class="div-font-box">
-                                <label for="passwd">passwd</label>
-                            </div>
-                            <div class="div-font-box">
-                                <input type="text" id="config-passwd" />
-                            </div>
-                        </div>
-                        <div class="flex-space-between">
-                            <div class="div-font-box">
-                                <label>display in plaintext</label>
-                            </div>
-                            <input
-                                type="checkbox"
-                                role="switch"
-                                aria-checked="false"
-                                aria-disabled="false"
-                                name=""
-                                true-value="true"
-                                false-value="false"
-                                style="display: inline"
-                            />
-                        </div>
-                        <div
-                            style="
+                            <div
+                                style="
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
-                            "
-                        >
-                            <div class="div-font-box">
-                                <button type="submit">confirm</button>
+                            ">
+                                <div class="div-font-box" id="submit-button">
+                                    <button type="submit"
+                                        style="background-color: #88c0d0;">confirm</button>
+                                </div>
+                                <div class="div-font-box" id="reset-button">
+                                    <button type="reset">reset</button>
+                                </div>
                             </div>
-                            <div class="div-font-box">
-                                <button type="submit">reset</button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                </div>
+                <div>
+                    <div><h2>生成二维码</h2></div>
+                    <div id="qr-box" class="qr-box">
+
+                    </div>
                 </div>
             </div>
 
             <!-- display-box -->
             <div>
-                
+
                 <div><h2>认证结果</h2></div>
                 <div id="display-box" class="display-box">
 

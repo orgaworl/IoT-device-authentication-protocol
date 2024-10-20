@@ -11,7 +11,7 @@ function createMainWindow() {
     frame:false,
     x: 0,
     y: 0,
-    width: 1000,
+    width: 2000,
     minWidth: 800,
     height: 800,
     show: false,

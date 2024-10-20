@@ -1,27 +1,8 @@
 /* styles.css */
 
-/* Add styles here to customize the appearance of your app */
-
-/* * {
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-
-} */
 .hidden {
     display: none;
 }
-
-/* html,body {
-    margin: auto;
-    height:100%;
-    width:100%;
-} */
-
-/* .block-title-p{
-    font-size: 10px;
-    margin: 0;
-    padding: 0;
-    color: #333;
-} */
 
 .flex-space-around {
     display: flex;
@@ -39,6 +20,23 @@
     margin: 4px;
     padding: 0;
     color: #333;
+}
+
+.log-font{
+    width:100%;
+    height:100%;
+    overflow-y:scroll;
+
+
+}
+input[type=text] {
+    box-sizing: border-box;
+    border:#5e81ac, solid, 2px;
+  }
+
+button{
+    padding: 4px;
+    margin:5px;
 }
 /*----------------------------------------------------------*/
 
@@ -118,9 +116,17 @@ main {
 
     margin: 80px auto;
     display: flex;
-   
+    flex-direction:column;   
+    justify-content: center;
+    align-items: center;
+}
+#above-box {
+    display: flex;
     justify-content: space-evenly;
     align-items: center;
+    width:1000px;
+
+
 }
 
 .config-box {
@@ -135,11 +141,28 @@ main {
     justify-content: center;
     align-items: center;
 }
-.display-box {
+
+.qr-box {
     border: #5e81ac, solid, 2px;
     border-radius: 5px;
 
     width: 500px;
+    height:200px;
+    padding: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#qr-image{
+    height: 100%;
+}
+
+.display-box {
+    border: #5e81ac, solid, 2px;
+    border-radius: 5px;
+
+    width: 900px;
     height:200px;
     padding: 10px;
 
