@@ -24,6 +24,9 @@ pip install -r requirements.txt
 ```
 
 ### R3: GmSSL
+已测试版本: GmSSL-3.1.1
+
+**for Linux**
 
 ```shell
 git clone https://gitee.com/mirrors/GmSSL.git
@@ -36,19 +39,29 @@ make test
 sudo make install
 ```
 
-### R4: electron front end gui
+**for windows**
+
+从[github](https://github.com/guanzhi/GmSSL)上下载GmSSL[安装包](https://github.com/guanzhi/GmSSL/releases/download/v3.1.1/GmSSL-3.1.1-win64.exe)并安装.
+
+将GmSSL动态库的路径加入环境变量,默认情况下动态库路径为:
+```
+C:\Program Files\GmSSL 3.1.1\bin
+```
+
+### R4: electron
 ```shell
 cd electronSrc
 npm install --save-dev electron
 npm install --save @electron/remote
-npm start #for test
-npm 
+npm start
 ```
 
 
 
 
 ## Usage
+### use python script only
+
 ```shell
 python progClient.py --ip <ip> --port <port> --passwd <passwd>
 ```
@@ -62,3 +75,4 @@ All parameters have default values:
 
 You can also specify their values using the command line.
 
+### user gui

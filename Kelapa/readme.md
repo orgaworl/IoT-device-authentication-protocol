@@ -1,3 +1,0 @@
-project请下载到PC端
-
-project_server请下载到移动设备

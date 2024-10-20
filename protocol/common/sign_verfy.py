@@ -37,6 +37,5 @@ def sign(message, private_key):
 def verify(message, signature, public_key):
     is_valid = ecdsa.verify(message, signature, public_key)
     if(is_valid):
-        print("验证签名成功！")
-        return
-    print("验证签名失败")
+        return True
+    return False

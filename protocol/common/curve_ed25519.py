@@ -27,4 +27,30 @@ class Curve:
         :return:Ed2551曲线的点
         """
         point = self.curve.decode_point(point_bytes)
-        return point
+        return point    
+    def add(self, Q, P):
+        """
+        点的加法
+        :param Q: 点
+        :param P: 点
+        :return:
+        """
+        return Q + P
+
+    def sub(self, Q, P):
+        """
+        点的减法
+        :param Q: 点
+        :param P: 点
+        :return:
+        """
+        return Q - P
+
+    def mul(self, scale, P):
+        """
+        点的数乘
+        :param scale: 数
+        :param P: 点
+        :return:
+        """
+        return scale * P
