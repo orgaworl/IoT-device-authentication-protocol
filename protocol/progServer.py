@@ -13,6 +13,7 @@ if __name__ == '__main__':
         opts, args = getopt.getopt(argv,"h",["ip=","port=","protocol="])
     except getopt.GetoptError:
         print('progServer.py --ip <ip> --port <port>')
+        sys.exit()
     HOST="127.0.0.1"
     port = 4398
     protocol=Protocol_kelapa_s

@@ -37,6 +37,7 @@ if __name__ == '__main__':
         opts, args = getopt.getopt(argv,"h",["benchmark","ip=","port=","passwd=","protocol="])
     except getopt.GetoptError:
         print('progClient.py --ip <ip> --port <port> --passwd <password>')
+        sys.exit()
     HOST="127.0.0.1"
     port = 4398
     passwd="passwd"
