@@ -40,8 +40,7 @@ if __name__ == '__main__':
     count=1
     while(1):
         try:
-            print(f"-------- {count} --------")
-            print(protocol)
+            print(f"-------- waiting for {count}th connection --------")
             protocol(HOST, port)
         except Exception as e:
             print(f"[ERR]{e}")

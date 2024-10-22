@@ -1,7 +1,8 @@
-import time
+
 import socket
+import random
 import sys, getopt
-import matplotlib.pyplot as plt
+
 
 from protocol_kelapa import Protocol_kelapa_c
 from protocol_harmony import Protocol_harmony_c
@@ -9,14 +10,18 @@ from protocol_harmony import Protocol_harmony_c
 
 
 
-def bench_mark(protocol):
+def bench_mark(protocol,loopTime=150,passwdLen=16):
+    import time
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
     HOST="127.0.0.1"
     port = 4398
-    passwd="a"*16
-    
+    #passwd="a"*passwdLen
+    passwd=random.randbytes(passwdLen)
     timeList=[]
     # get time
-    for testTime in range(100):
+    for testTime in range(loopTime):
         try:
             start_time=time.time()
             protocol(HOST, int(port),passwd)
@@ -25,9 +30,16 @@ def bench_mark(protocol):
         except socket.error:
             print("[ERR] socket Error")
         time.sleep(0.4)
-    print(timeList)
+    dataLen=len(timeList)
+    timeList=timeList[dataLen//10:dataLen-dataLen//10]
     plt.plot([i+1 for i in range(len(timeList))],timeList)
     plt.show()
+    with open(f"../benchmark/{protocol.__name__}.csv",mode="w",encoding="utf-8") as f:
+        res=pd.DataFrame()
+        res.insert(loc=len(res.columns),column='test order',value=[i+1 for i in range(len(timeList))])
+        res.insert(loc=len(res.columns),column='cost time',value=timeList)
+        res.to_csv(f,header=True,index=False,lineterminator='\n')
+        f.close()
     
     
 
@@ -72,11 +84,10 @@ if __name__ == '__main__':
     if(flow_choice==0):
         try:
             protocol(HOST, int(port),passwd)
-            print(protocol)
         except socket.timeout:
             print("[ERR] socket timeout")
         except socket.error:
-            print("[ERR] socket Error")
+            print("[ERR] socket error")
         except Exception as e:
             print(f"[ERR] {e}")
     elif (flow_choice==1):
