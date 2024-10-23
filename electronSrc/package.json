@@ -1,7 +1,7 @@
 {
   "name": "protocal_front_end",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "auto": "nodemon --watch main.js --exec electron .",

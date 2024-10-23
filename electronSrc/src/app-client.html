@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+        <link href="app-client.css" rel="stylesheet" />
+        <title>IoT Device Authentication</title>
+    </head>
+
+    <body>
+        <script src="app-client.js"></script>
+        <header>
+            <div class="title-bar">
+                <div class="title">
+                    <p>IoT Device Authentication</p>
+                </div>
+
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <img
+                            id="option-minimize"
+                            src="../img/minus_icon_246303.png"
+                            width="20px" />
+                    </div>
+
+                    <div class="menu-item">
+                        <img
+                            id="option-maximize"
+                            src="../img/checkbox_empty_icon_246490.png"
+                            width="20px" />
+                    </div>
+
+                    <div class="menu-item">
+                        <img
+                            id="option-close"
+                            src="../img/cross_icon_246446.png"
+                            width="20px" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-bar">
+                <div class="options">
+                    <ol style="padding-left: 10px">
+                        <li class="option">Help</li>
+                        <li class="option">About</li>
+                    </ol>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- config-box -->
+            <div id="above-box">
+                <div>
+                    <div>
+                        <h2>认证方参数</h2>
+                    </div>
+                    <div class="config-box">
+                        <form action="#" id="config">
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="host">ip</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input type="text" id="config-host"
+                                        placeholder="127.0.0.1" />
+                                </div>
+                            </div>
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="port">port</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input type="text" id="config-port"
+                                        placeholder="4398" />
+                                </div>
+                            </div>
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="passwd">passwd</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input
+                                        type="password"
+                                        id="config-passwd"
+                                        placeholder="passwd" />
+                                </div>
+                            </div>
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="passwd">protocol</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input
+                                        type="radio"
+                                        id="option-kelapa"
+                                        name="options"
+                                        value="kelapa" checked />
+                                    <label for="option-kelapa">kelapa</label>
+                                    <input
+                                        type="radio"
+                                        id="option-harmony"
+                                        name="options"
+                                        value="harmony" />
+                                    <label
+                                        for="option-harmony">harmony</label><br />
+                                </div>
+                            </div>
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label>plaintext</label>
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    role="switch"
+                                    aria-checked="false"
+                                    aria-disabled="false"
+                                    name
+                                    true-value="true"
+                                    false-value="false"
+                                    style="display: inline" checked="True" />
+                            </div>
+                            <div
+                                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                ">
+                                <div class="div-font-box" id="submit-button">
+                                    <button
+                                        class="btn"
+                                        type="submit"
+                                        style="background-color: #88c0d0">
+                                        confirm
+                                    </button>
+                                </div>
+                                <div class="div-font-box" id="reset-button">
+                                    <button type="reset">reset</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <h2>生成二维码</h2>
+                    </div>
+                    <div id="qr-box" class="qr-box"></div>
+                </div>
+            </div>
+
+            <!-- display-box -->
+            <div>
+                <div>
+                    <h2>认证结果</h2>
+                </div>
+                <div id="display-box" class="display-box"></div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-bar-name">
+                <p class="footer-bar-name-text">2024</p>
+            </div>
+        </footer>
+    </body>
+</html>

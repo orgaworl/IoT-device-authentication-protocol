@@ -24,7 +24,7 @@ if __name__ == '__main__':
         elif opt in ("--ip"):
             HOST=arg
         elif opt in ("--port"):
-            port=arg
+            port=int(arg)
         elif opt in ("--protocol"):
             if arg=="harmony":
                 protocol=Protocol_harmony_s

@@ -5,11 +5,12 @@
         <meta
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
-        <link href="style.css" rel="stylesheet" />
+        <link href="app-client.css" rel="stylesheet" />
         <title>IoT Device Authentication</title>
     </head>
 
     <body>
+        <script src="app-server.js"></script>
         <header>
             <div class="title-bar">
                 <div class="title">
@@ -54,7 +55,9 @@
             <!-- config-box -->
             <div id="above-box">
                 <div>
-                    <div><h2>认证方参数</h2></div>
+                    <div>
+                        <h2>运行参数</h2>
+                    </div>
                     <div class="config-box">
                         <form action="#" id="config">
                             <div class="flex-space-between">
@@ -77,60 +80,61 @@
                             </div>
                             <div class="flex-space-between">
                                 <div class="div-font-box">
-                                    <label for="passwd">passwd</label>
+                                    <label for="passwd">protocol</label>
                                 </div>
                                 <div class="div-font-box">
-                                    <input type="text" id="config-passwd"
-                                        placeholder="passwd" />
+                                    <input
+                                        type="radio"
+                                        id="option-kelapa"
+                                        name="options"
+                                        value="kelapa" checked />
+                                    <label for="option-kelapa">kelapa</label>
+                                    <input
+                                        type="radio"
+                                        id="option-harmony"
+                                        name="options"
+                                        value="harmony" />
+                                    <label
+                                        for="option-harmony">harmony</label><br />
                                 </div>
                             </div>
-                            <div class="flex-space-between">
-                                <div class="div-font-box">
-                                    <label>display plaintext</label>
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    role="switch"
-                                    aria-checked="false"
-                                    aria-disabled="false"
-                                    name
-                                    true-value="true"
-                                    false-value="false"
-                                    style="display: inline" />
-                            </div>
+
                             <div
                                 style="
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                            ">
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                ">
                                 <div class="div-font-box" id="submit-button">
-                                    <button type="submit"
-                                        style="background-color: #88c0d0;">confirm</button>
+                                    <button
+                                        class="btn"
+                                        type="submit"
+                                        style="background-color: #88c0d0">
+                                        run
+                                    </button>
                                 </div>
                                 <div class="div-font-box" id="reset-button">
-                                    <button type="reset">reset</button>
+                                    <button type="reset">stop</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
                 <div>
-                    <div><h2>生成二维码</h2></div>
-                    <div id="qr-box" class="qr-box">
-
+                    <div>
+                        <h2>验证信息</h2>
                     </div>
+                    <div id="qr-box" class="qr-box"></div>
                 </div>
             </div>
 
             <!-- display-box -->
-            <div>
-
-                <div><h2>认证结果</h2></div>
-                <div id="display-box" class="display-box">
-
+            <!-- <div>
+                <div>
+                    <h2>认证结果</h2>
                 </div>
-            </div>
+                <div id="display-box" class="display-box"></div>
+            </div> -->
         </main>
 
         <footer>
@@ -138,6 +142,5 @@
                 <p class="footer-bar-name-text">2024</p>
             </div>
         </footer>
-        <script src="index.js"></script>
     </body>
 </html>

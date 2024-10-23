@@ -2,6 +2,8 @@
 */test_QR.png
 */node_modules
 
+/benchmark/*.svg
+/benchmark/*.csv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
