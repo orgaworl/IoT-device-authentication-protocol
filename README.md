@@ -17,13 +17,14 @@ We implement the new solution Kelapa for IoT device authetication with less inte
 sudo apt install gcc g++ git build-essentials cmake python
 ```
 
-### R2: Python packages
-
+**for pie**
 ```shell
-pip install -r requirements.txt
+sudo apt install gcc g++ git cmake python libgmp3-dev libmpfr-dev libmpc-dev
 ```
 
-### R3: GmSSL
+
+
+### R2: GmSSL
 已测试版本: GmSSL-3.1.1
 
 **for Linux**
@@ -46,6 +47,21 @@ sudo make install
 将GmSSL动态库的路径加入环境变量,默认情况下动态库路径为:
 ```
 C:\Program Files\GmSSL 3.1.1\bin
+```
+
+
+
+### R3: Python packages
+
+```shell
+pip install -r requirements.txt
+```
+
+or 
+```shell
+python -m venv venv
+source ./venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ### R4: electron

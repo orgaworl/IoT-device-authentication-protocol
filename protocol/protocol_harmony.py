@@ -1,6 +1,6 @@
 import random
 import socket
-
+import time
 from common import SM4
 from common import SM3HashComp
 from common import sign_verfy as sv
@@ -185,7 +185,9 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str) -> bool:
 
     # Step Three Iot设备接收B和u
     B = socket_client.recv(1024)
+    #print(f"B:{B}")
     u = socket_client.recv(1024)
+    #print(f"u:{u}")
     B = IoT.curve.from_bytes(B)
     u = int(u)
 
@@ -407,16 +409,17 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
     # Step One  IoT主控设备扫码计算x
     QR_salt = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     x = IoTs.compute_x(QR_salt)
-    print("IoT主控设备成功扫描二维码\n")
+    #print("IoT主控设备成功扫描二维码\n")
     # Step Two  IoT主控设备接收A
     A = conn.recv(1024)
     A = IoTs.curve.from_bytes(A)
 
     # Step Three  IoT主控设备计算B，发送B和u
     B, b, u = IoTs.compute_B(x)
-    print("IoT主控设备发送B: ", B, '\n')
-    print("IoT主控设备发送u: ", u, '\n')
     conn.send(IoTs.curve.to_bytes(B))
+    time.sleep(0.01)  # in case send two package together
+    #print("IoT主控设备发送B: ", B, '\n')
+    #print("IoT主控设备发送u: ", u, '\n')
     conn.send(str(u).encode('utf-8'))
 
     # Step Four-Five   IoT主控设备计算S和临时密钥K
@@ -424,14 +427,14 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
 
     # Step Six IoT主控设备接收M1，验证M1
     M1 = conn.recv(1024).decode('utf-8')
-    print(f"M1:{M1}")
+    #print(f"M1:{M1}")
     M1 = int(M1)
     if IoTs.verfy_M1(A, B, K, M1) == 0:
         return False
 
     # Step Seven IoT主控设备计算M2
     M2 = IoTs.compute_M2(A, M1, K)
-    print("IoT主控设备传输M2： ", M2, '\n')
+    #print("IoT主控设备传输M2： ", M2, '\n')
     conn.send(str(M2).encode('utf-8'))
 
     # Step Eight IoT设备解密密文
@@ -441,11 +444,11 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
     # Step Nine IoT主控设备加密传输身份标识公钥c2
     c2 = IoTs.encrypt(K, IoTs.public_key)
     conn.send(c2)
-    print("IoT主控设备传输加密后的身份标识公钥: ", c2, '\n')
+    #print("IoT主控设备传输加密后的身份标识公钥: ", c2, '\n')
 
     # Step ten IoT主控设备生成随机数y和点Y
     Y, y = IoTs.random_data()
-    print("IoT主控设备传输Y: ", Y, '\n')
+    #print("IoT主控设备传输Y: ", Y, '\n')
     conn.send(IoTs.curve.to_bytes(Y))
 
     # Step 11 IoT主控设备接收密文和Z
@@ -458,7 +461,7 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
 
     # Step 14 IoT主控设备签名，加密
     cipher_iots = IoTs.enc_sign(Z, Y, ssk)
-    print("IoT主控设备传输加密后的签名： ", cipher_iots, '\n')
+    #print("IoT主控设备传输加密后的签名： ", cipher_iots, '\n')
     conn.send(cipher_iots)
 
     print(f"[SUC] {ssk.hex()}")

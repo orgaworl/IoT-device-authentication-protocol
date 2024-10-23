@@ -108,7 +108,7 @@ class Protocol_kelapa_c_action:
 
 
 
-def Protocol_kelapa_c(HOST: str, port: int,passwd:str) -> None:
+def Protocol_kelapa_c(HOST: str, port: int,passwd:str,debug:bool=False) -> None:
     """
     IoT设备参与协议的运行
      :param HOST:IoT主控设备的IP地址
@@ -122,15 +122,16 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str) -> None:
 
     
     # Step One Iot设备生成二维码或者PIN码
-    #print(f"[key] passwd:\n[val] {passwd}")
+    if debug:print(f"[key] passwd:\n[val] {passwd}")
     QR = IoT.create_QR(passwd)
     socket_client.send(QR.encode("UTF-8"))
-    #print(f"[com] gen qrcode")
+    if debug:print(f"[com] gen qrcode")
     
     # Step Two  Iot设备接收alpha，计算临时密钥K
     alpha = socket_client.recv(1024).decode("UTF-8")  # 接受来自Iot主控设备的alpha
-    #print(f"[   ] recv alpha: {alpha}")
+    
     alpha = int(alpha)
+    if debug:print(f"[key] recv alpha:\n[val] {hex(alpha)}")
     key, kc = IoT.compute_key(QR)  # 生成随机数kc和计算临时密钥key
 
     # Step Three Iot设备计算身份标识公钥的密文和beta，发送给Iot主控设备
@@ -138,8 +139,8 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str) -> None:
     cipher_iot = IoT.compute_cipher(IoT.public_key, key.encode('utf-8'))
     socket_client.send(cipher_iot)
     socket_client.send(str(beta).encode("UTF-8"))
-    #print(f"[key] send pk cipher:\n[val] 0x{cipher_iot.hex()}")
-    #print(f"[key] send beta:\n[val] {hex(beta)}", )
+    if debug:print(f"[key] send pk cipher:\n[val] 0x{cipher_iot.hex()}")
+    if debug:print(f"[key] send beta:\n[val] {hex(beta)}", )
 
     # Step Four Iot设备接收密文并解密，验证
     cipher_iots = socket_client.recv(1024)  # 接受来自Iot主控设备的加密身份标识公钥bytes类型
@@ -148,16 +149,16 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str) -> None:
     # Step Five Iot设备计算Y并发送
     Y, y = IoT.random_data_mark()
     socket_client.send(IoT.curve.to_bytes(Y))
-    #print("[com] verify pk")
+    if debug:print("[com] verify pk")
     
     # Step Six  Iot设备接收X
     X_data = socket_client.recv(1024)
     X = IoT.curve.from_bytes(X_data)    # 接受来自Iot主控设备的X(point类型)
-    #print(f"[key] send Y:\n[val] {hex(Y.x)}{hex(Y.y)[2:]}")
+    if debug:print(f"[key] send Y:\n[val] {hex(Y.x)}{hex(Y.y)[2:]}")
     
     # Step Seven - Nine  Iot设备计算会话密钥ssk
     ssk = IoT.compute_ssk(X, Y, y, public_key_iots, IoT.public_key, IoT.private_key)
-    #print(f"[key] gen session key:\n[val] {hex(ssk)}")
+    if debug:print(f"[key] gen session key:\n[val] {hex(ssk)}")
     print(f"[SUC] {hex(ssk)}")
     # 关闭连接
     socket_client.close()
@@ -250,10 +251,10 @@ def Protocol_kelapa_s(HOST: str, port: int) -> None:
 
     # Step One  IoT主控设备扫码
     QR = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
-    #print(f"[key] scan qrcode:\n[val] {QR} ")
+    print(f"[key] scan qrcode:\n[val] {QR} ")
     # Step Two  IoT主控设备发送alpha
     alpha, r = IoTs.generate_alpha(QR)      # alpha是字符串类型
-    #print(f"[key] gen and send alpha:\n[val] {alpha} ")
+    print(f"[key] gen and send alpha:\n[val] {alpha} ")
     conn.send(alpha.encode("UTF-8"))        # 发送bytes类型
     
 
@@ -266,8 +267,8 @@ def Protocol_kelapa_s(HOST: str, port: int) -> None:
     cipher_iots, public_key_iot, key = IoTs.compute_key_cipher(QR, r, beta, cipher_iot, IoTs.public_key)
     conn.send(cipher_iots)  # 发送加密后的身份标识公钥
     #print(f"[key] IoT主控设备发送的身份标识公钥密文:\n[val] 0x{cipher_iots.hex()} ")
-    #print(f"[key] recv pk cipher:\n[val] 0x{cipher_iots.hex()} ")
-    #print(f"[com] verify pk cipher success")
+    print(f"[key] recv pk cipher:\n[val] 0x{cipher_iots.hex()} ")
+    print(f"[com] verify pk cipher success")
     # Step Five   IoT主控设备接收Y,转为点类型
     Y_data = conn.recv(1024)
     Y = IoTs.curve.from_bytes(Y_data)
@@ -275,7 +276,7 @@ def Protocol_kelapa_s(HOST: str, port: int) -> None:
     # Step Six IoT主控设备计算X，发送X
     X, x = IoTs.random_data_mark()
     conn.send(IoTs.curve.to_bytes(X))  # 发送X
-    #print(f"[key] recv X:\n[val] {hex(X.x)}{hex(X.y)[2:]} ")
+    print(f"[key] recv X:\n[val] {hex(X.x)}{hex(X.y)[2:]} ")
 
     # Step Seven - Nine  协商会话密钥ssk
     ssk = IoTs.compute_ssk(X, Y, x, IoTs.public_key, public_key_iot, IoTs.private_key)

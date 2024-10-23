@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 
 plt.rc("font",family='MicroSoft YaHei',weight="bold")
+plt.rc("font",family='Noto Sans Mono CJK SC',weight="bold")
 harmonyTest=pd.read_csv('Protocol_harmony_c.csv')["cost time"]
 kelapaTest=pd.read_csv('Protocol_kelapa_c.csv')["cost time"]
 
@@ -29,19 +30,19 @@ for i in range(len(data)):
     box['means'][i].set_color('black')
     
 
-ax.set_xticklabels(['kelapa(on x86 pc)', 'harmony(on x86 pc)'])
-ax.set_title('不同协议时间开销箱型图')
-ax.set_xlabel('测试协议名称')
-ax.set_ylabel('时间开销(s)')
+ax.set_xticklabels(['kelapa', 'harmony'])
+ax.set_title('box plots of time cost for different protocols')
+ax.set_xlabel('protocol')
+ax.set_ylabel('time cost(ms)')
 ax.legend()
 
 
 fig,bx=plt.subplots()
 bx.plot([i for i in range(len(data[0]))],data[0], label='Kelapa', color='blue')
 bx.plot([i for i in range(len(data[1]))],data[1], label='Harmony', color='red')
-bx.set_title('不同协议时间开销折线图')
-bx.set_xlabel('测试序号')
-bx.set_ylabel('时间开销(s)')
+bx.set_title('line chart of time cost for different protocols')
+bx.set_xlabel('test order')
+bx.set_ylabel('time cost(ms)')
 bx.legend()
 
 
