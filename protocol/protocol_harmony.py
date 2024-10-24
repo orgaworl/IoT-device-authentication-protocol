@@ -158,7 +158,7 @@ class Protocol_harmony_c_action:
         sv.verify(message, decryptTest, public_key_iots)
 
 
-def Protocol_harmony_c(HOST: str, port: int, passwd:str) -> bool:
+def Protocol_harmony_c(HOST: str, port: int, passwd:str,debug:bool=False) -> bool:
     """
     IoT设备参与协议的运行
     :param HOST:IoT主控设备IP地址
@@ -185,9 +185,9 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str) -> bool:
 
     # Step Three Iot设备接收B和u
     B = socket_client.recv(1024)
-    #print(f"B:{B}")
+    if debug: print(f"[key] send parameter <B>\n[val] 0x{B.hex()}")
     u = socket_client.recv(1024)
-    #print(f"u:{u}")
+    if debug: print(f"[key] send parameter <u>:\n[val] {u}")
     B = IoT.curve.from_bytes(B)
     u = int(u)
 
@@ -197,17 +197,17 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str) -> bool:
     # Step Six IoT设备计算M1发送M1
     M1 = IoT.compute_M1(A, B, K)
     socket_client.send(str(M1).encode('utf-8'))
-
+    if debug: print(f"[key] send parameter <M1>:\n[val] {M1}")
     # Step Seven IoT设备验证M2
     M2 = socket_client.recv(1024).decode('utf-8')
     M2 = int(M2)
     if IoT.verfy_M2(A, M1, K, M2) == 0:
         return False
-
+    if debug: print(f"[sta] verify parameter <M2> successful")
     # Step Eight IoT设备加密传输身份标识公钥c1
     c1 = IoT.encrypt(K, IoT.public_key)
     socket_client.send(c1)
-
+    if debug: print(f"[key] send parameter <c1>:\n[val] 0x{c1.hex()}")
     # Step Nine IoT设备解密接收到的签名公钥
     cipher = socket_client.recv(1024)
     public_key_iots = IoT.decrypt(K, cipher)
@@ -230,7 +230,7 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str) -> bool:
     # Step 15 IoT设备解密并验证签名
     IoT.dec_vrfy(cipher_iots, ssk, Z, Y, public_key_iots)
 
-    print(f"[SUC] {ssk.hex()}")
+    print(f"[SUC] 0x{ssk.hex()}")
 
 
 
@@ -387,7 +387,7 @@ class Protocol_harmony_s_action:
 
 
 
-def Protocol_harmony_s(HOST: str, port: int) -> bool:
+def Protocol_harmony_s(HOST: str, port: int,debug:bool=False) -> bool:
     """
     IoT主控设备参与协议的运行
     :param HOST: IoT设备IP地址
@@ -409,17 +409,18 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
     # Step One  IoT主控设备扫码计算x
     QR_salt = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     x = IoTs.compute_x(QR_salt)
-    #print("IoT主控设备成功扫描二维码\n")
+    if debug: print("[sta] scan qr-code\n")
     # Step Two  IoT主控设备接收A
     A = conn.recv(1024)
     A = IoTs.curve.from_bytes(A)
 
     # Step Three  IoT主控设备计算B，发送B和u
     B, b, u = IoTs.compute_B(x)
-    conn.send(IoTs.curve.to_bytes(B))
+    B_bytes= IoTs.curve.to_bytes(B)
+    conn.send(B_bytes)
     time.sleep(0.01)  # in case send two package together
-    #print("IoT主控设备发送B: ", B, '\n')
-    #print("IoT主控设备发送u: ", u, '\n')
+    if debug: print(f"[key] send parameter <B>\n[val] {B_bytes}")
+    if debug: print(f"[key] send parameter <u>\n[val] {hex(u)}")
     conn.send(str(u).encode('utf-8'))
 
     # Step Four-Five   IoT主控设备计算S和临时密钥K
@@ -427,14 +428,14 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
 
     # Step Six IoT主控设备接收M1，验证M1
     M1 = conn.recv(1024).decode('utf-8')
-    #print(f"M1:{M1}")
+    #if debug: print(f"M1:{M1}")
     M1 = int(M1)
     if IoTs.verfy_M1(A, B, K, M1) == 0:
         return False
 
     # Step Seven IoT主控设备计算M2
     M2 = IoTs.compute_M2(A, M1, K)
-    #print("IoT主控设备传输M2： ", M2, '\n')
+    if debug: print(f"[key] send parameter <M2>:\n[val] {M2}")
     conn.send(str(M2).encode('utf-8'))
 
     # Step Eight IoT设备解密密文
@@ -444,11 +445,11 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
     # Step Nine IoT主控设备加密传输身份标识公钥c2
     c2 = IoTs.encrypt(K, IoTs.public_key)
     conn.send(c2)
-    #print("IoT主控设备传输加密后的身份标识公钥: ", c2, '\n')
+    if debug: print(f"[key] send parameter <encrypted identity public key>\n[val] {c2}")
 
     # Step ten IoT主控设备生成随机数y和点Y
     Y, y = IoTs.random_data()
-    #print("IoT主控设备传输Y: ", Y, '\n')
+    if debug: print(f"[key] send parameter <Y>\n[val]{Y}")
     conn.send(IoTs.curve.to_bytes(Y))
 
     # Step 11 IoT主控设备接收密文和Z
@@ -461,7 +462,7 @@ def Protocol_harmony_s(HOST: str, port: int) -> bool:
 
     # Step 14 IoT主控设备签名，加密
     cipher_iots = IoTs.enc_sign(Z, Y, ssk)
-    #print("IoT主控设备传输加密后的签名： ", cipher_iots, '\n')
+    if debug: print(f"[key] send parameter <encrypted signature>\n[val] 0x{cipher_iots.hex()}")
     conn.send(cipher_iots)
 
     print(f"[SUC] {ssk.hex()}")

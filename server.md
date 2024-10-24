@@ -2,17 +2,15 @@
 
 ## 项目文件说明
 
-1. aes.py AES加解密程序
+1. SM4.py SM4加解密程序
 
 2. curve_ed25519.py 椭圆曲线Ed25519类
 
 3. get_random_num.py 生成与群的阶的欧拉函数值互素的随机数
 
-4. oprf.py OPRF函数和SHA256哈希函数
+4. oprf.py OPRF函数和SM3哈希函数
 
-5. IoT_main.py IoT主控设备的类，包含IoT主控设备的初始化，以及IoT主控设备相关函数
 
-6. iot_server.py IoT主控设备运行协议的代码
 
 ## 项目代码执行
 
