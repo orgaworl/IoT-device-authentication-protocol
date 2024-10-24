@@ -125,9 +125,9 @@ npm run start
 - mpc
 
 
-**for ubuntu**
+**for Ubuntu20.04**
 ```shell
-sudo apt install gcc g++ git build-essentials cmake python
+sudo apt install gcc g++ git build-essentials cmake python python3-pip libzbar-dev npm
 ```
 
 **for Raspberry Pi 4**
@@ -140,7 +140,7 @@ sudo apt install gcc g++ git cmake python libgmp3-dev libmpfr-dev libmpc-dev
 ### R2: GmSSL
 已测试版本: GmSSL-3.1.1
 
-**for Linux**
+**for Ubuntu20.04**
 
 ```shell
 git clone https://gitee.com/mirrors/GmSSL.git
@@ -166,41 +166,34 @@ C:\Program Files\GmSSL 3.1.1\bin
 
 ### R3: Python packages
 
+**for Ubuntu20.04**
+在`protocol`路径下运行
 ```shell
 pip install -r requirements.txt
 ```
 
-or 
+**for Raspberry Pi 4**
+当系统要求使用虚拟环境,则替换为如下命令:
 ```shell
+cd ./protocol
 python -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
+
+
 ### R4: electron
-安装electron
+确保已安装`npm`后进入`electronSrc`路径.
+
+首先安装electron项目所需依赖:
 ```shell
-node.js
-electron
+npm install
 ```
 
-
-required dependencies:
-```shell
-cd electronSrc
-npm install --save-dev electron
-npm install --save @electron/remote
-npm install --save-dev @electron-forge/cli
-```
-
-for test:
+随后即可运行GUI.
 ```shell
 npm run start
 ```
 
-for distrubution:
-```shell
-npx electron-forge import
-npm run make
-```
-
+## 
