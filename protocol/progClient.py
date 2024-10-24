@@ -39,7 +39,7 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     
 helpMessage='''
 Usage:
-    python progClient.py --ip <ip> --port <port> --passwd <password> --protocol <protocol> <--benchmark> <--debug>
+    python progClient.py [options]
 
 Options:
     --ip <ip>               Specify the IP address. (default "127.0.0.1")

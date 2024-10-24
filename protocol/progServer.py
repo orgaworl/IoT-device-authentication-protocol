@@ -7,7 +7,7 @@ import sys, getopt
 
 helpMessage='''
 Usage:
-    python progServer.py --ip <ip> --port <port> --protocol <protocol>  <--debug>
+    python progServer.py [options]
 
 Options:
     --ip <ip>               Specify the IP address. (default "127.0.0.1")
