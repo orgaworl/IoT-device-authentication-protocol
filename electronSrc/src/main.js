@@ -7,11 +7,11 @@ function createStartupWindow() {
   const mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
     frame: false,
-    x: 0,
-    y: 0,
+    x: 200,
+    y: 150,
     width: 500,
     minWidth: 500,
-    height: 500,
+    height: 400,
     show: false,
     webPreferences: {
       nodeIntegration: true,
@@ -36,8 +36,8 @@ function createClientWindow() {
   const mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
     frame: false,
-    x: 0,
-    y: 0,
+    x: 250,
+    y: 200,
     width: 1200,
     minWidth: 800,
     height: 800,
@@ -63,11 +63,12 @@ function createServerWindow() {
   const mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
     frame: false,
-    x: 0,
-    y: 0,
-    width: 1200,
-    minWidth: 800,
-    height: 800,
+    x: 300,
+    y: 250,
+    width: 1000,
+    minWidth: 900,
+    height: 520,
+    minHeight: 520,
     show: false,
     webPreferences: {
       nodeIntegration: true,

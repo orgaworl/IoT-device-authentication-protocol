@@ -27,6 +27,9 @@ window.addEventListener("DOMContentLoaded", () => {
     mainWindow.close();
   });
 
+
+
+  var childProcess=[];
   // 监视提交表单事件
   const configButton = document.querySelector("#config");
   configButton.addEventListener("submit", function (event) {
@@ -59,34 +62,45 @@ window.addEventListener("DOMContentLoaded", () => {
       ],
       { stdio: "pipe" }
     );
-
+    // 记录子进程
+    childProcess.push(python);
     python.stdout.on("data", function (data) {
       // INSERT P
-      console.error(`Error: ${data.toString().trim()}`);
-      //   var contentPart = document.createElement("p");
-      //   contentPart.innerText = data.toString("utf8");
-      //   contentPart.className = "log-font";
-      //   let display_window = document.getElementById("qr-box");
-      //   display_window.innerHTML = "";
-      //   display_window.appendChild(contentPart);
+
+      var contentPart = document.createElement("p");
+      contentPart.innerText = data.toString("utf8");
+      contentPart.className = "log-font";
+      let display_window = document.getElementById("display-box");
+      display_window.innerHTML = "";
+      display_window.appendChild(contentPart);
     });
 
     python.stderr.on("data", (data) => {
       console.error(`stderr: ${data}`);
     });
 
+    // insert status box
+    let status = document.getElementById("qr-box").children[0];
+    status.innerHTML = "RUNNING"+"<br>"+protocol;
+    
+    //
     python.on("close", (code) => {
       console.log(`child process exited with code ${code}`);
+      status.innerHTML = "STOP";
+
     });
   });
   // 监视reset事件
   configButton.addEventListener("reset", function (event) {
-    // event.preventDefault(); // stop the form from submitting
-    // let config_form = document.getElementById("config");
-    // config_form.reset();
-    // let display_window = document.getElementById("display-box");
-    // display_window.innerHTML = "";
-    // let qr_windows = document.getElementById("qr-box");
-    // qr_windows.innerHTML = "";
+    event.preventDefault();
+    for(i in childProcess){
+      childProcess[i].kill();
+    }
+    let display_window = document.getElementById("display-box");
+    display_window.innerHTML = "";
+
+    // 修改运行状态提示
+    let status = document.getElementById("qr-box").children[0];
+    status.innerHTML = "RUNNING"+"<br>"+protocol;
   });
 });

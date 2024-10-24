@@ -43,11 +43,17 @@ window.addEventListener("DOMContentLoaded", () => {
     if (passwd == "") {
       passwd = "passwd";
     }
-    var protocol = document.querySelector(
+
+    let protocol = document.querySelector(
       'input[name="options"]:checked'
     ).value;
     if (protocol == "") {
       protocol = "kelapa";
+    }
+    additionOptions="";
+    let is_hidden_detail=document.getElementById("option-hidden-detail").checked;
+    if (!is_hidden_detail) {
+      additionOptions+='--debug'
     }
     //require("child_process").spawn("C:\\Program Files\\010 Editor.exe");
     var python = require("child_process").spawn("python", [
@@ -56,6 +62,7 @@ window.addEventListener("DOMContentLoaded", () => {
       "--port=" + port,
       "--passwd=" + passwd,
       "--protocol=" + protocol,
+      additionOptions,
     ]);
 
     python.stdout.on("data", function (data) {
@@ -89,8 +96,8 @@ window.addEventListener("DOMContentLoaded", () => {
   // 监视reset事件
   configButton.addEventListener("reset", function (event) {
     event.preventDefault(); // stop the form from submitting
-    let config_form = document.getElementById("config");
-    config_form.reset();
+    // let config_form = document.getElementById("config");
+    // config_form.reset();
 
     let display_window = document.getElementById("display-box");
     display_window.innerHTML = "";

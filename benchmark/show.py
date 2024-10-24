@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 plt.rc("font",family='MicroSoft YaHei',weight="bold")
-plt.rc("font",family='Noto Sans Mono CJK SC',weight="bold")
+#plt.rc("font",family='Noto Sans Mono CJK SC',weight="bold")
 harmonyTest=pd.read_csv('Protocol_harmony_c.csv')["cost time"]
 kelapaTest=pd.read_csv('Protocol_kelapa_c.csv')["cost time"]
 

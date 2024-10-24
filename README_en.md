@@ -65,13 +65,24 @@ pip install -r requirements.txt
 ```
 
 ### R4: electron
+required dependencies:
 ```shell
 cd electronSrc
 npm install --save-dev electron
 npm install --save @electron/remote
-npm start
+npm install --save-dev @electron-forge/cli
 ```
 
+for test:
+```shell
+npm run start
+```
+
+for distrubution:
+```shell
+npx electron-forge import
+npm run make
+```
 
 
 
