@@ -34,6 +34,7 @@
 
 **对于物联网控制设备**
 ```shell
+
 Usage:
     python progServer.py [options]
 
@@ -42,12 +43,16 @@ Options:
     --port <port>           Specify the port.       (default "4398")
     --protocol <protocol>   Specify the protocol.   (default "kelapa")
     <--debug>               Print protocol parameters.
+
+
 ```
 对于主控设备,可使用选项为该命令行程序指定IP地址、端口和认证协议,并且可以决定是否输出协议内部运行参数.
 
 
 **对于物联网设备**
 ```shell
+
+
 Usage:
     python progClient.py [options]
 
@@ -58,6 +63,8 @@ Options:
     --protocol <protocol>   Specify the protocol.   (default "kelapa")
     <--benchmark>           Record time cost.
     <--debug>               Print running details.
+
+
 ```
 对于物联网设备,可为该命令行程序指定IP地址、端口、认证协议和认证口令,并且可以决定是否输出协议内部运行参数,以及是否启用测试模式.
 
