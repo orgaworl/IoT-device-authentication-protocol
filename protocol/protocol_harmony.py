@@ -3,7 +3,7 @@ import socket
 import time
 from common import SM4
 from common import SM3HashComp
-from common import sign_verfy as sv
+from common import sign_verify as sv
 from common import curve_ed25519 as _curve
 from common import generate_qr as QR
 

@@ -8,7 +8,7 @@
 
 代码包括两部分:
 
-- python:基于python实现认证协议交互流程, 并以命令行程序展现.
+- 基于python实现认证协议交互流程, 并以命令行程序展现.
 
 - 基于electron为认证程序实现简介的图形界面,便于用户使用.
 
@@ -18,13 +18,14 @@
     - show.py:用于对比两种认证协议的运行效率
 
 - protocol 基于Python的认证协议命令行程序实现源代码
+    - common              公共函数
     - requirements.txt    Python依赖库文件
     - progServer.py       主控设备程序
     - progClient.py       物联网设备程序
     - protocol_harmony.py Open Harmony认证协议实现
     - protocol_kelapa.py  Kelapa认证协议实现
 
-- electronSrc 基于Electron的图形界面实现源代码
+- electronSrc 基于Electron的图形化认证界面源代码
 
 ## Usage
 ### U1 仅使用Python命令行程序
