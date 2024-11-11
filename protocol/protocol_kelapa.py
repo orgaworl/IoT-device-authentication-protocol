@@ -11,16 +11,19 @@ from common import get_random_num
 
 
 class Protocol_kelapa_c_action:
-    # 获取曲线的阶和生成元的点
-    curve = _curve.Curve()
-    order = curve.order
-    generator_point = curve.generator_point
-    private_key = 2024
-    public_key = private_key * generator_point
+    def __init__(self,curve_name:str="Ed25519"):
+        # 获取曲线的阶和生成元的点
+        self.curve = _curve.Curve()
+        self.order = self.curve.order
+        self.generator_point = self.curve.generator_point
+        self.private_key = 2024
+        self.public_key = self.private_key * self.generator_point
 
-    # 生成对称加解密方案
-    SysmCipher = SM4()
-    HashFunc=SM3HashComp()
+        # 生成对称加解密方案
+        self.SysmCipher = SM4()
+        self.HashFunc=SM3HashComp()
+
+
     def create_QR(self,passwd: str) -> str:
         """
         产生动态二维码，输出二维码的字符串解析
@@ -108,7 +111,7 @@ class Protocol_kelapa_c_action:
 
 
 
-def Protocol_kelapa_c(HOST: str, port: int,passwd:str,debug:bool=False) -> None:
+def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> None:
     """
     IoT设备参与协议的运行
      :param HOST:IoT主控设备的IP地址
@@ -116,7 +119,7 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,debug:bool=False) -> None:
     :return:
     """
     # 系统初始化
-    IoT = Protocol_kelapa_c_action()
+    IoT = Protocol_kelapa_c_action("stark256")
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_client.connect((HOST, port))
 
@@ -168,18 +171,20 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,debug:bool=False) -> None:
 
 
 class Protocol_kelapa_s_action:
-    # 获取曲线的阶和生成元的点
-    curve = _curve.Curve()
-    order = curve.order
-    generator_point = curve.generator_point
+    def __init__(self,curve_name:str="Ed25519"):
+        # 获取曲线的阶和生成元的点
+        self.curve = _curve.Curve(curve_name)
+        self.order = self.curve.order
+        self.generator_point = self.curve.generator_point
 
-    # 生成IoT设备身份标识私钥和公钥
-    private_key = 4046
-    public_key = private_key * generator_point
+        # 生成IoT设备身份标识私钥和公钥
+        self.private_key = 4046
+        self.public_key = self.private_key * self.generator_point
 
-    # 生成SysmCipher加解密方案
-    SysmCipher = SM4()
-    HashFunc=SM3HashComp()
+        # 生成SysmCipher加解密方案
+        self.SysmCipher = SM4()
+        self.HashFunc=SM3HashComp()
+
     def generate_alpha(self, QR_string: str) -> (str, int):
         """
         IoT主控设备生成随机数r, 计算alpha
@@ -232,14 +237,14 @@ class Protocol_kelapa_s_action:
         return ssk
     
 
-def Protocol_kelapa_s(HOST: str, port: int,debug:bool=False) -> None:
+def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> None:
     """
     IoT主控设备参与协议的运行
     :param HOST: IoT设备的IP
     :param port: 端口号
     :return:
     """
-    IoTs = Protocol_kelapa_s_action()
+    IoTs = Protocol_kelapa_s_action("stark256")
     # 建立socket连接
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 端口号复用

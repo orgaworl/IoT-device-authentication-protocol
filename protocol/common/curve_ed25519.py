@@ -2,14 +2,19 @@ from ecpy import curves
 
 
 class Curve:
-    """
-    Ed25519曲线类
-    """
-    # 选择曲线
-    curve = curves.Curve.get_curve('Ed25519')
-    # 获取曲线的阶和生成元的点
-    order = curve.order
-    generator_point = curve.generator
+
+    def __init__(self,curve_name:str='Ed25519'):
+        """
+        默认 Ed25519 曲线类
+        """
+
+        # 选择曲线
+        self.curve = curves.Curve.get_curve(curve_name)
+        # 获取曲线的阶和生成元的点
+        self.order = self.curve.order
+        self.generator_point = self.curve.generator
+
+
 
     def to_bytes(self, point):
         """

@@ -9,18 +9,20 @@ from common import generate_qr as QR
 
 
 class Protocol_harmony_c_action:
-    # 获取曲线的阶和生成元的点
-    curve = _curve.Curve()
-    order = curve.order
-    generator_point = curve.generator_point
-    private_key = 2024
-    public_key = private_key * generator_point
-    private_key_iot = sv.gen_private_key(private_key)
-    public_key_iot = sv.gen_public_key(public_key)
 
-    # 生成AES加解密方案
-    SysmCipher = SM4()
-    HashFunc=SM3HashComp()
+    def __init__(self,curve_name:str="Ed25519"):
+        # 获取曲线的阶和生成元的点
+        self.curve = _curve.Curve(curve_name)
+        self.order = self.curve.order
+        self.generator_point = self.curve.generator_point
+        self.private_key = 2024
+        self.public_key = self.private_key * self.generator_point
+        self.private_key_iot = sv.gen_private_key(self.private_key)
+        self.public_key_iot = sv.gen_public_key(self.public_key)
+
+        # 生成AES加解密方案
+        self.SysmCipher = SM4()
+        self.HashFunc=SM3HashComp()
     def create_QR(self,passwd:str) -> str:
         """
         产生动态二维码，输出二维码的字符串解析
@@ -158,7 +160,7 @@ class Protocol_harmony_c_action:
         sv.verify(message, decryptTest, public_key_iots)
 
 
-def Protocol_harmony_c(HOST: str, port: int, passwd:str,debug:bool=False) -> bool:
+def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> bool:
     """
     IoT设备参与协议的运行
     :param HOST:IoT主控设备IP地址
@@ -235,18 +237,20 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,debug:bool=False) -> boo
 
 
 class Protocol_harmony_s_action:
-    # 获取曲线的阶和生成元的点
-    curve = _curve.Curve()
-    order = curve.order
-    generator_point = curve.generator_point
-    private_key = 2024
-    public_key = private_key * generator_point
-    private_key_iots = sv.gen_private_key(private_key)
-    public_key_iots = sv.gen_public_key(public_key)
 
-    # 生成AES加解密方案
-    SysmCipher =SM4()
-    HashFunc=SM3HashComp()
+    def __init__(self,curve_name:str="Ed25519"):
+        # 获取曲线的阶和生成元的点
+        self.curve = _curve.Curve(curve_name)
+        self.order = self.curve.order
+        self.generator_point = self.curve.generator_point
+        self.private_key = 2024
+        self.public_key = self.private_key * self.generator_point
+        self.private_key_iots = sv.gen_private_key(self.private_key)
+        self.public_key_iots = sv.gen_public_key(self.public_key)
+
+        # 生成AES加解密方案
+        self.SysmCipher =SM4()
+        self.HashFunc=SM3HashComp()
     def compute_x(self, QR_salt: str) -> int:
         """
         计算x
@@ -387,7 +391,7 @@ class Protocol_harmony_s_action:
 
 
 
-def Protocol_harmony_s(HOST: str, port: int,debug:bool=False) -> bool:
+def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> bool:
     """
     IoT主控设备参与协议的运行
     :param HOST: IoT设备IP地址

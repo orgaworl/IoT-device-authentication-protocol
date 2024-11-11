@@ -19,16 +19,23 @@ Options:
 '''
 
 if __name__ == '__main__':
+    # process input parameters
     try:
         argv=sys.argv[1:]
-        opts, args = getopt.getopt(argv,"h",["ip=","port=","protocol=","debug"])
+        opts, args = getopt.getopt(argv,"h",["ip=","port=","protocol=","ec=","debug","bms"])
     except getopt.GetoptError:
         print(helpMessage)
         sys.exit()
+
+    # default config
     HOST="127.0.0.1"
     port = 4398
     protocol=Protocol_kelapa_s
-    debug=False
+    debug_flag=False
+    bms_flag=False
+    curve_name="Ed25519"
+
+    # process parameters
     for opt, arg in opts:
         if opt == '-h':
             print(helpMessage)
@@ -47,16 +54,22 @@ if __name__ == '__main__':
                 sys.exit()
 
         elif opt in ("--debug"):
-            debug=True
+            debug_flag=True
+        elif opt in ("--bms"):
+            bms_flag=True
+        elif opt in ("--ec"):
+            curve_name=arg
         else:
             print("invalid argument")
             sys.exit()
-    #protocol(HOST, port)
+    
+    
+    # run protocol
     count=1
     while(1):
         try:
             print(f"-------- waiting for {count}th connection --------")
-            protocol(HOST, port,debug)
+            protocol(HOST, port,curve_name,debug_flag,bms_flag)
         except Exception as e:
             print(f"[ERR]{e}")
         count+=1

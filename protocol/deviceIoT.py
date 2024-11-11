@@ -10,7 +10,7 @@ from protocol_harmony import Protocol_harmony_c
 
 
 
-def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTime=150,passwdLen=16):
+def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,bms:bool=False,loopTime=150,passwdLen=16):
     import time
     import pandas as pd
     import numpy as np
@@ -20,9 +20,9 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     for testTime in range(loopTime):
         try:
             start_time=time.time()
-            protocol(HOST, int(port),passwd,debug)
+            protocol(HOST, int(port),passwd,debug,bms)
             end_time=time.time()
-            timeList.append(end_time-start_time)
+            timeList.append((end_time-start_time)*1000)
         except socket.error:
             print("[ERR] socket Error")
         time.sleep(1)
@@ -60,9 +60,8 @@ Examples:
 if __name__ == '__main__':
     try:
         argv=sys.argv[1:]
-        opts, args = getopt.getopt(argv,"h",["benchmark","ip=","port=","passwd=","protocol=","debug"])
+        opts, args = getopt.getopt(argv,"h",["help","ip=","port=","passwd=","protocol=","ec=","debug","benchmark","bms"])
     except getopt.GetoptError:
-        print(helpMessage)
         sys.exit()
     HOST="127.0.0.1"
     #HOST="192.168.31.222"
@@ -71,8 +70,11 @@ if __name__ == '__main__':
     protocol=Protocol_kelapa_c
     flow_choice=0
     debug=False
+    benchmark_steps=False;
+    curve_name="Ed25519"
+
     for opt, arg in opts:
-        if opt == '-h':
+        if opt in ('-h' ,"--help"):
             print(helpMessage)
             sys.exit()
         elif opt in ("--ip"):
@@ -89,8 +91,13 @@ if __name__ == '__main__':
             else:
                 print("unknow protocol")
                 sys.exit()
-        elif opt =="--benchmark":
+        elif opt in("--ec"):
+            curve_name=arg
+        elif opt in ("--benchmark","--bm"):
             flow_choice=1
+        elif opt in("--benchmark_steps","--bms"):
+            benchmark_steps=True
+
         elif opt =="--debug":
             debug=True
         else:
@@ -100,7 +107,7 @@ if __name__ == '__main__':
 
     if(flow_choice==0):
         try:
-            protocol(HOST, int(port),passwd,debug)
+            protocol(HOST, int(port),passwd,curve_name,debug,benchmark_steps)
         except socket.timeout:
             print("[ERR] socket timeout")
         except socket.error:
@@ -108,7 +115,7 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"[ERR] {e}")
     elif (flow_choice==1):
-        bench_mark(protocol,HOST, int(port),passwd,debug)
+        bench_mark(protocol,HOST, int(port),passwd,curve_name,debug,benchmark_steps)
 
 
 
