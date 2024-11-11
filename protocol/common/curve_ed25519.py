@@ -9,6 +9,7 @@ class Curve:
         """
 
         # 选择曲线
+        self.curve_name=curve_name
         self.curve = curves.Curve.get_curve(curve_name)
         # 获取曲线的阶和生成元的点
         self.order = self.curve.order
@@ -23,6 +24,9 @@ class Curve:
         :return:点的字节化表示
         """
         point_bytes = self.curve.encode_point(point)
+        if type(point_bytes)==list:
+            point_bytes=bytes(point_bytes)
+        
         return point_bytes
 
     def from_bytes(self, point_bytes):

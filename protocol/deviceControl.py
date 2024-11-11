@@ -4,6 +4,8 @@ import socket
 from protocol_kelapa import Protocol_kelapa_s
 from protocol_harmony import Protocol_harmony_s
 import sys, getopt
+from common import supportEC
+
 
 helpMessage='''
 Usage:
@@ -14,15 +16,62 @@ Options:
     --port <port>           Specify the port.       (default "4398")
     --protocol <protocol>   Specify the protocol.   (default "kelapa")
     <--debug>               Print protocol parameters.
-    
-
 '''
+
+
+def bench_mark(protocol,HOST: str, port: int,debug:bool=False,loopTime=100):
+    import time
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    
+    curve_names=[item["name"] for item in supportEC.curves]
+    res_=np.ndarray(shape=(0,3))
+    tested_curve_list=[]
+    for curve_name in curve_names:
+        time_cost_matrix=np.ndarray(shape=(0,3))
+        print(f"Testing {curve_name}...")
+        benchmark_init_time=10
+        for testTime in range(benchmark_init_time+loopTime):
+            try:
+                start_time=time.time()
+                phase_time_list=protocol(HOST, int(port),curve_name,debug)
+                end_time=time.time()
+                phase_time_list.append((end_time-start_time)*1000)
+                if testTime>=benchmark_init_time:
+                    time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
+                time.sleep(0.5)
+            except socket.error:
+                print("[ERR] socket Error")
+            except Exception as e:
+                print(f"[ERR] unknow")
+
+            
+        #print(time_cost_matrix)
+        row_len=time_cost_matrix.shape[0]
+        try:
+            res_=np.vstack((res_,[sum(time_cost_matrix[:,0])/row_len, sum(time_cost_matrix[:,1])/row_len, sum(time_cost_matrix[:,2])/row_len]))
+            tested_curve_list.append(curve_name)
+        except Exception as e:
+            print(f"[ERR] unknow")
+
+
+    # save data
+    with open(f"../benchmark/{protocol.__name__}_IoT_device.csv",mode="w",encoding="utf-8") as f:
+        df=pd.DataFrame()
+        df.insert(loc=len(df.columns),column='curve',value=tested_curve_list)
+        df.insert(loc=len(df.columns),column='phase1 cost',value=res_[:,0])
+        df.insert(loc=len(df.columns),column='phase2 cost',value=res_[:,1])
+        df.insert(loc=len(df.columns),column='total cost',value=res_[:,2])
+        df.to_csv(f,header=True,index=False,lineterminator='\n')
+        f.close()
 
 if __name__ == '__main__':
     # process input parameters
     try:
         argv=sys.argv[1:]
-        opts, args = getopt.getopt(argv,"h",["ip=","port=","protocol=","ec=","debug","bms"])
+        opts, args = getopt.getopt(argv,"h",["ip=","port=","protocol=","ec=","debug","benchmark"])
     except getopt.GetoptError:
         print(helpMessage)
         sys.exit()
@@ -32,7 +81,7 @@ if __name__ == '__main__':
     port = 4398
     protocol=Protocol_kelapa_s
     debug_flag=False
-    bms_flag=False
+    benchmark_flag=False
     curve_name="Ed25519"
 
     # process parameters
@@ -55,8 +104,8 @@ if __name__ == '__main__':
 
         elif opt in ("--debug"):
             debug_flag=True
-        elif opt in ("--bms"):
-            bms_flag=True
+        elif opt in ("--benchmark"):
+            benchmark_flag=True
         elif opt in ("--ec"):
             curve_name=arg
         else:
@@ -65,11 +114,14 @@ if __name__ == '__main__':
     
     
     # run protocol
-    count=1
-    while(1):
-        try:
-            print(f"-------- waiting for {count}th connection --------")
-            protocol(HOST, port,curve_name,debug_flag,bms_flag)
-        except Exception as e:
-            print(f"[ERR]{e}")
-        count+=1
+    if (benchmark_flag==True):
+        bench_mark(protocol,HOST,port,debug_flag)
+    else:
+        count=1
+        while(1):
+            try:
+                print(f"-------- waiting for {count}th connection --------")
+                protocol(HOST, port,curve_name,debug_flag)
+            except Exception as e:
+                print(f"[ERR]{e}")
+            count+=1

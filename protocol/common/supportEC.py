@@ -1,8 +1,7 @@
 curves = [
-
     {
         'name':      "stark256",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0x0800000000000011000000000000000000000000000000000000000000000001,
         'generator': (0x01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca,
@@ -13,10 +12,9 @@ curves = [
         'b':         0x06f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89,
 
     },
-
     {
         'name':      "frp256v1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xF1FD178C0B3AD58F10126DE8CE42435B3961ADBCABC8CA6DE8FCF353D86E9C03,
         'generator': (0xB6B3D4C356C139EB31183D4749D423958C27D2DCAF98B70164C97A2DD98F5CFF,
@@ -30,7 +28,7 @@ curves = [
 
     {
         'name':      "secp521r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      521,
         'field':     0x01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
         'generator': (0x00C6858E06B70404E9CD9E3ECB662395B4429C648139053FB521F828AF606B4D3DBAA14B5E77EFE75928FE1DC127A2FFA8DE3348B3C1856A429BF97E7E31C2E5BD66,
@@ -44,7 +42,7 @@ curves = [
 
     {
         'name':      "secp384r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      384,
         'field':     0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffff0000000000000000ffffffff,
         'generator': (0xaa87ca22be8b05378eb1c71ef320ad746e1d3b628ba79b9859f741e082542a385502f25dbf55296c3a545e3872760ab7,
@@ -58,7 +56,7 @@ curves = [
 
     {
         'name':      "secp256k1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f,
         'generator': (0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798,
@@ -72,7 +70,7 @@ curves = [
 
     {
         'name':      "secp256r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff,
         'generator': (0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296,
@@ -85,7 +83,7 @@ curves = [
 
     {
         'name':      "secp224k1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      224,
         'field':     0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFE56D,
         'generator': (0xA1455B334DF099DF30FC28A169A467E9E47075A90F7E650EB6B7A45C,
@@ -98,7 +96,7 @@ curves = [
 
     {
         'name':      "secp224r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      224,
         'field':     0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001,
         'generator': (0xB70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21 ,
@@ -112,7 +110,7 @@ curves = [
 
     {
         'name':      "secp192k1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      192,
         'field':     0xfffffffffffffffffffffffffffffffffffffffeffffee37,
         'generator': (0xdb4ff10ec057e9ae26b07d0280b7f4341da5d1b1eae06c7d,
@@ -125,7 +123,7 @@ curves = [
 
     {
         'name':      "secp192r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xfffffffffffffffffffffffffffffffeffffffffffffffff,
         'generator': (0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012,
@@ -139,7 +137,7 @@ curves = [
 
     {
         'name':      "secp160k1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      160,
         'field':     0xfffffffffffffffffffffffffffffffeffffac73,
         'generator': (0x3b4c382ce37aa192a4019e763036f4f5dd4d7ebb,
@@ -152,7 +150,7 @@ curves = [
 
     {
         'name':      "secp160r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      160,
         'field':     0xffffffffffffffffffffffffffffffff7fffffff,
         'generator': (0x4a96b5688ef573284664698968c38bb913cbfc82,
@@ -165,7 +163,7 @@ curves = [
 
     {
         'name':      "secp160r2",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      160,
         'field':     0xfffffffffffffffffffffffffffffffeffffac73,
         'generator': (0x52dcb034293a117e1f4ff11b30f7199d3144ce6d,
@@ -178,7 +176,7 @@ curves = [
 
     {
         'name':      "Brainpool-p512t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      512,
         'field':     0xAADD9DB8DBE9C48B3FD4E6AE33C9FC07CB308DB3B3C9D20ED6639CCA703308717D4D9B009BC66842AECDA12AE6A380E62881FF2F2D82C68528AA6056583A48F3,
         'generator': (0x640ECE5C12788717B9C1BA06CBC2A6FEBA85842458C56DDE9DB1758D39C0313D82BA51735CDB3EA499AA77A7D6943A64F7A3F25FE26F06B51BAA2696FA9035DA,
@@ -192,7 +190,7 @@ curves = [
 
     {
         'name':      "Brainpool-p512r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      512,
         'field':     0xAADD9DB8DBE9C48B3FD4E6AE33C9FC07CB308DB3B3C9D20ED6639CCA703308717D4D9B009BC66842AECDA12AE6A380E62881FF2F2D82C68528AA6056583A48F3,
         'generator': (0x81AEE4BDD82ED9645A21322E9C4C6A9385ED9F70B5D916C1B43B62EEF4D0098EFF3B1F78E2D0D48D50D1687B93B97D5F7C6D5047406A5E688B352209BCB9F822,
@@ -206,7 +204,7 @@ curves = [
 
     {
         'name':      "Brainpool-p384t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      384,
         'field':     0x8CB91E82A3386D280F5D6F7E50E641DF152F7109ED5456B412B1DA197FB71123ACD3A729901D1A71874700133107EC53,
         'generator': (0x18DE98B02DB9A306F2AFCD7235F72A819B80AB12EBD653172476FECD462AABFFC4FF191B946A5F54D8D0AA2F418808CC,
@@ -220,7 +218,7 @@ curves = [
 
     {
         'name':      "Brainpool-p384r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      384,
         'field':     0x8CB91E82A3386D280F5D6F7E50E641DF152F7109ED5456B412B1DA197FB71123ACD3A729901D1A71874700133107EC53,
         'generator': (0x1D1C64F068CF45FFA2A63A81B7C13F6B8847A3E77EF14FE3DB7FCAFE0CBD10E8E826E03436D646AAEF87B2E247D4AF1E,
@@ -234,7 +232,7 @@ curves = [
 
     {
         'name':      "Brainpool-p320t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      320,
         'field':     0xD35E472036BC4FB7E13C785ED201E065F98FCFA6F6F40DEF4F92B9EC7893EC28FCD412B1F1B32E27,
         'generator': (0x925BE9FB01AFC6FB4D3E7D4990010F813408AB106C4F09CB7EE07868CC136FFF3357F624A21BED52,
@@ -248,7 +246,7 @@ curves = [
 
     {
         'name':      "Brainpool-p320r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      320,
         'field':     0xD35E472036BC4FB7E13C785ED201E065F98FCFA6F6F40DEF4F92B9EC7893EC28FCD412B1F1B32E27,
         'generator': (0x43BD7E9AFB53D8B85289BCC48EE5BFE6F20137D10A087EB6E7871E2A10A599C710AF8D0D39E20611,
@@ -262,7 +260,7 @@ curves = [
 
     {
         'name':      "Brainpool-p256r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xa9fb57dba1eea9bc3e660a909d838d726e3bf623d52620282013481d1f6e5377,
         'generator': (0x8bd2aeb9cb7e57cb2c4b482ffc81b7afb9de27e1e3bd23c23a4453bd9ace3262,
@@ -275,7 +273,7 @@ curves = [
 
     {
         'name':      "Brainpool-p256t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xa9fb57dba1eea9bc3e660a909d838d726e3bf623d52620282013481d1f6e5377,
         'generator': (0xa3e8eb3cc1cfe7b7732213b23a656149afa142c47aafbc2b79a191562e1305f4,
@@ -288,7 +286,7 @@ curves = [
 
     {
         'name':      "Brainpool-p224r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      224,
         'field':     0xD7C134AA264366862A18302575D1D787B09F075797DA89F57EC8C0FF,
         'generator': (0x0D9029AD2C7E5CF4340823B2A87DC68C9E4CE3174C1E6EFDEE12C07D,
@@ -301,7 +299,7 @@ curves = [
 
     {
         'name':      "Brainpool-p224t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      224,
         'a':         0xD7C134AA264366862A18302575D1D787B09F075797DA89F57EC8C0FC,
         'b':         0x4B337D934104CD7BEF271BF60CED1ED20DA14C08B3BB64F18A60888D,
@@ -314,7 +312,7 @@ curves = [
 
     {
         'name':      "Brainpool-p192r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      192,
         'field':     0xc302f41d932a36cda7a3463093d18db78fce476de1a86297,
         'generator': (0xc0a0647eaab6a48753b033c56cb0f0900a2f5c4853375fd6,
@@ -327,7 +325,7 @@ curves = [
 
     {
         'name':      "Brainpool-p192t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      192,
         'field':     0xc302f41d932a36cda7a3463093d18db78fce476de1a86297,
         'generator': (0x3ae9e58c82f63c30282e1fe7bbf43fa72c446af6f4618129,
@@ -340,7 +338,7 @@ curves = [
 
     {
         'name':      "Brainpool-p160r1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      160,
         'field':     0xe95e4a5f737059dc60dfc7ad95b3d8139515620f,
         'generator': (0xbed5af16ea3f6a4f62938c4631eb5af7bdbcdbc3,
@@ -353,7 +351,7 @@ curves = [
 
     {
         'name':      "Brainpool-p160t1",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      160,
         'field':     0xe95e4a5f737059dc60dfc7ad95b3d8139515620f,
         'generator': (0xb199b13b9b34efc1397e64baeb05acc265ff2378,
@@ -366,7 +364,7 @@ curves = [
 
     {
         'name':      "NIST-P256",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      256,
         'field':     0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff,
         'generator': (0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296,
@@ -379,7 +377,7 @@ curves = [
 
     {
         'name':      "NIST-P224",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      224,
         'field':     0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001,
         'generator': (0xB70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21 ,
@@ -392,7 +390,7 @@ curves = [
 
     {
         'name':      "NIST-P192",
-        'type':      WEIERSTRASS,
+        'type':      "WEIERSTRASS",
         'size':      192,
         'field':     0xfffffffffffffffffffffffffffffffeffffffffffffffff,
         'generator': (0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012,
@@ -405,7 +403,7 @@ curves = [
 
     {
         'name':      "Ed448",
-        'type':      TWISTEDEDWARD,
+        'type':      "TWISTEDEDWARD",
         'size':      448,
         'field':     0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
         'generator': (0x4f1970c66bed0ded221d15a622bf36da9e146570470f1767ea6de324a3d3a46412ae1af72ab66511433b80e18b00938e2626a82bc70cc05e,
@@ -418,7 +416,7 @@ curves = [
 
     {
         'name':      "Ed25519",
-        'type':      TWISTEDEDWARD,
+        'type':      "TWISTEDEDWARD",
         'size':      256,
         'field':     0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffed,
         'generator': (15112221349535400772501151409588531511454012693041857206046113283949847762202,
@@ -431,7 +429,7 @@ curves = [
 
     {
         'name':      "Curve448",
-        'type':      MONTGOMERY,
+        'type':      "MONTGOMERY",
         'size':      448,
         'field':     0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
         'generator': (5,
@@ -444,7 +442,7 @@ curves = [
 
     {
         'name':      "Curve25519",
-        'type':      MONTGOMERY,
+        'type':      "MONTGOMERY",
         'size':      256,
         'field':     0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffed,
         'generator': (9,
@@ -455,3 +453,4 @@ curves = [
         'a':         486662
     },
 ]
+

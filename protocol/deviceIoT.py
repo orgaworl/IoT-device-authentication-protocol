@@ -2,7 +2,7 @@
 import socket
 import random
 import sys, getopt
-
+from common import supportEC
 
 from protocol_kelapa import Protocol_kelapa_c
 from protocol_harmony import Protocol_harmony_c
@@ -10,31 +10,57 @@ from protocol_harmony import Protocol_harmony_c
 
 
 
-def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,bms:bool=False,loopTime=150,passwdLen=16):
+def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTime=3,passwdLen=100):
     import time
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
-    timeList=[]
     # get time
-    for testTime in range(loopTime):
+
+    # loop
+    
+    curve_names=[item["name"] for item in supportEC.curves]
+    res_=np.ndarray(shape=(0,3))
+    tested_curve_list=[]
+    for curve_name in curve_names:
+        #time_cost_matrix=[]
+        time_cost_matrix=np.ndarray(shape=(0,3))
+        print(f"Testing {curve_name}...")
+        benchmark_init_time=10
+        for testTime in range(benchmark_init_time+loopTime):
+            try:
+                start_time=time.time()
+                phase_time_list=protocol(HOST, int(port),passwd,curve_name,debug)
+                end_time=time.time()
+                phase_time_list.append((end_time-start_time)*1000)
+                if testTime>=benchmark_init_time:
+                    time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
+                time.sleep(0.2)
+            except socket.error:
+                print("[ERR] socket Error")
+            except Exception as e:
+                print(f"[ERR] ")
+
+        #print(time_cost_matrix)
+        row_len=time_cost_matrix.shape[0]
         try:
-            start_time=time.time()
-            protocol(HOST, int(port),passwd,debug,bms)
-            end_time=time.time()
-            timeList.append((end_time-start_time)*1000)
-        except socket.error:
-            print("[ERR] socket Error")
-        time.sleep(1)
-    dataLen=len(timeList)
-    timeList=timeList[dataLen//10:dataLen-dataLen//10]
-    plt.plot([i+1 for i in range(len(timeList))],timeList)
-    plt.show()
-    with open(f"../benchmark/{protocol.__name__}.csv",mode="w",encoding="utf-8") as f:
-        res=pd.DataFrame()
-        res.insert(loc=len(res.columns),column='test order',value=[i+1 for i in range(len(timeList))])
-        res.insert(loc=len(res.columns),column='cost time',value=timeList)
-        res.to_csv(f,header=True,index=False,lineterminator='\n')
+            res_=np.vstack((res_,[sum(time_cost_matrix[:,0])/row_len, sum(time_cost_matrix[:,1])/row_len, sum(time_cost_matrix[:,2])/row_len]))
+            tested_curve_list.append(curve_name)
+        except Exception as e:
+            print(f"[ERR] unknow")
+
+    # show
+    # plt.plot([i+1 for i in range(len(timeList))],timeList)
+    # plt.show()
+
+    # save data
+    with open(f"../benchmark/{protocol.__name__}_IoT_device.csv",mode="w",encoding="utf-8") as f:
+        df=pd.DataFrame()
+        df.insert(loc=len(df.columns),column='curve',value=tested_curve_list)
+        df.insert(loc=len(df.columns),column='phase1 cost',value=res_[:,0])
+        df.insert(loc=len(df.columns),column='phase2 cost',value=res_[:,1])
+        df.insert(loc=len(df.columns),column='total cost',value=res_[:,2])
+        df.to_csv(f,header=True,index=False,lineterminator='\n')
         f.close()
     
 helpMessage='''
@@ -60,7 +86,7 @@ Examples:
 if __name__ == '__main__':
     try:
         argv=sys.argv[1:]
-        opts, args = getopt.getopt(argv,"h",["help","ip=","port=","passwd=","protocol=","ec=","debug","benchmark","bms"])
+        opts, args = getopt.getopt(argv,"h",["ip=","port=","passwd=","protocol=","ec=","help","debug","benchmark"])
     except getopt.GetoptError:
         sys.exit()
     HOST="127.0.0.1"
@@ -68,7 +94,7 @@ if __name__ == '__main__':
     port = 4398
     passwd="passwd"
     protocol=Protocol_kelapa_c
-    flow_choice=0
+    benchmark_flag=0
     debug=False
     benchmark_steps=False;
     curve_name="Ed25519"
@@ -93,10 +119,9 @@ if __name__ == '__main__':
                 sys.exit()
         elif opt in("--ec"):
             curve_name=arg
-        elif opt in ("--benchmark","--bm"):
-            flow_choice=1
-        elif opt in("--benchmark_steps","--bms"):
-            benchmark_steps=True
+        elif opt in ("--benchmark"):
+            benchmark_flag=1
+
 
         elif opt =="--debug":
             debug=True
@@ -104,18 +129,18 @@ if __name__ == '__main__':
             print("invalid argument")
             sys.exit()
 
-
-    if(flow_choice==0):
+    if(benchmark_flag==1):
+        bench_mark(protocol,HOST, int(port),passwd,debug)
+    elif(benchmark_flag==0):
         try:
-            protocol(HOST, int(port),passwd,curve_name,debug,benchmark_steps)
+            protocol(HOST, int(port),passwd,curve_name,debug)
         except socket.timeout:
             print("[ERR] socket timeout")
         except socket.error:
             print("[ERR] socket error")
         except Exception as e:
             print(f"[ERR] {e}")
-    elif (flow_choice==1):
-        bench_mark(protocol,HOST, int(port),passwd,curve_name,debug,benchmark_steps)
+
 
 
 

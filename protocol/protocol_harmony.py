@@ -160,7 +160,7 @@ class Protocol_harmony_c_action:
         sv.verify(message, decryptTest, public_key_iots)
 
 
-def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> bool:
+def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519",debug:bool=False) -> list:
     """
     IoT设备参与协议的运行
     :param HOST:IoT主控设备IP地址
@@ -168,7 +168,7 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
     :return:
     """
     # 系统初始化
-    IoT = Protocol_harmony_c_action()
+    IoT = Protocol_harmony_c_action(curve_name)
     # 创建socket对象
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -176,15 +176,19 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
     socket_client.connect((HOST, port))
 
     # 协议开始
+    # ------------------------- phase 1 -------------------------------
     # Step One Iot设备生成二维码或者PIN码以及盐
+    time_cost=[]
+    time_start = time.time()
     QR = IoT.create_QR(passwd)
     salt = IoT.create_salt()
     socket_client.send((QR+salt).encode("UTF-8"))
-
+    
     # Step Two IoT设备计算A
     A, a = IoT.random_data()
-    socket_client.send(IoT.curve.to_bytes(A))
-
+    A_bytes= IoT.curve.to_bytes(A)
+    socket_client.send(A_bytes)
+    
     # Step Three Iot设备接收B和u
     B = socket_client.recv(1024)
     if debug: print(f"[key] send parameter <B>\n[val] 0x{B.hex()}")
@@ -214,6 +218,11 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
     cipher = socket_client.recv(1024)
     public_key_iots = IoT.decrypt(K, cipher)
 
+    time_cost.append((time.time()-time_start)*1000)
+
+
+    # ------------------------- phase 2 -------------------------------
+    time_start = time.time()
     # Step Ten IoT设备接收Y，生成Z和z
     Y = socket_client.recv(1024)
     Z, z = IoT.random_data()
@@ -231,8 +240,10 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
 
     # Step 15 IoT设备解密并验证签名
     IoT.dec_vrfy(cipher_iots, ssk, Z, Y, public_key_iots)
-
+    time_cost.append((time.time()-time_start)*1000)
     print(f"[SUC] 0x{ssk.hex()}")
+
+    return time_cost
 
 
 
@@ -391,7 +402,7 @@ class Protocol_harmony_s_action:
 
 
 
-def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> bool:
+def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=False) -> list:
     """
     IoT主控设备参与协议的运行
     :param HOST: IoT设备IP地址
@@ -399,7 +410,7 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     :return:
     """
 
-    IoTs = Protocol_harmony_s_action()
+    IoTs = Protocol_harmony_s_action(curve_name)
     # 建立socket连接
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 端口号复用
@@ -410,6 +421,9 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     socket_server.listen(1)
     conn, address = socket_server.accept()
     
+    # ------------------------- phase 1 -------------------------------
+    time_cost=[]
+    time_start=time.time()
     # Step One  IoT主控设备扫码计算x
     QR_salt = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     x = IoTs.compute_x(QR_salt)
@@ -451,6 +465,11 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     conn.send(c2)
     if debug: print(f"[key] send parameter <encrypted identity public key>\n[val] {c2}")
 
+    time_cost.append((time.time()-time_start)*1000)
+    
+    
+    # ------------------------- phase 2 -------------------------------
+    time_start=time.time()
     # Step ten IoT主控设备生成随机数y和点Y
     Y, y = IoTs.random_data()
     if debug: print(f"[key] send parameter <Y>\n[val]{Y}")
@@ -473,3 +492,5 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     # 关闭连接
     conn.close()
     socket_server.close()
+    time_cost.append((time.time()-time_start)*1000)
+    return time_cost

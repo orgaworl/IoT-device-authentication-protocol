@@ -5,3 +5,4 @@ from .oprf import SM3HashComp
 from .SM4 import SM4
 from .generate_qr import *
 from .sign_verify import *
+from .supportEC import *

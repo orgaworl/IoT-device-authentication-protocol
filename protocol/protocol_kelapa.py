@@ -1,5 +1,6 @@
 import random
 import socket
+import time
 from Crypto.Util.number import *
 from common import SM4
 from common import SM3HashComp
@@ -111,7 +112,7 @@ class Protocol_kelapa_c_action:
 
 
 
-def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> None:
+def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",debug:bool=False) -> list:
     """
     IoT设备参与协议的运行
      :param HOST:IoT主控设备的IP地址
@@ -119,11 +120,13 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     :return:
     """
     # 系统初始化
-    IoT = Protocol_kelapa_c_action("stark256")
+    IoT = Protocol_kelapa_c_action(curve_name)
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_client.connect((HOST, port))
 
-    
+    # ------------------------- phase 1 -------------------------------
+    time_cost=[]
+    time_start= time.time()
     # Step One Iot设备生成二维码或者PIN码
     if debug:print(f"[key] passwd:\n[val] {passwd}")
     QR = IoT.create_QR(passwd)
@@ -149,6 +152,9 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     cipher_iots = socket_client.recv(1024)  # 接受来自Iot主控设备的加密身份标识公钥bytes类型
     public_key_iots = IoT.DeCrypt(0, cipher_iots, key.encode('utf-8'))   # 解密，point类型
 
+    time_cost.append((time.time()-time_start)*1000)
+    # ------------------------- phase 2 -------------------------------
+    time_start= time.time()
     # Step Five Iot设备计算Y并发送
     Y, y = IoT.random_data_mark()
     socket_client.send(IoT.curve.to_bytes(Y))
@@ -165,6 +171,8 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     print(f"[SUC] {hex(ssk)}")
     # 关闭连接
     socket_client.close()
+    time_cost.append((time.time()-time_start)*1000)
+    return time_cost
     
 
 
@@ -237,14 +245,14 @@ class Protocol_kelapa_s_action:
         return ssk
     
 
-def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=False,bms_flag:bool=False) -> None:
+def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=False) -> list:
     """
     IoT主控设备参与协议的运行
     :param HOST: IoT设备的IP
     :param port: 端口号
     :return:
     """
-    IoTs = Protocol_kelapa_s_action("stark256")
+    IoTs = Protocol_kelapa_s_action(curve_name)
     # 建立socket连接
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 端口号复用
@@ -254,6 +262,10 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     socket_server.listen(1)
     conn, address = socket_server.accept()
 
+
+    # ------------------------- phase 1 -------------------------------
+    time_cost=[]
+    time_start= time.time()
     # Step One  IoT主控设备扫码
     QR = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     if debug:print(f"[key] scan qrcode:\n[val] {QR} ")
@@ -274,6 +286,11 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     #print(f"[key] IoT主控设备发送的身份标识公钥密文:\n[val] 0x{cipher_iots.hex()} ")
     if debug:print(f"[key] recv <encrypted pk>:\n[val] 0x{cipher_iots.hex()} ")
     if debug:print(f"[com] verify pk cipher success")
+
+
+    time_cost.append((time.time()-time_start)*1000)
+    # ------------------------- phase 2 -------------------------------
+    time_start= time.time()
     # Step Five   IoT主控设备接收Y,转为点类型
     Y_data = conn.recv(1024)
     Y = IoTs.curve.from_bytes(Y_data)
@@ -289,4 +306,6 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     # 关闭连接
     conn.close()
     socket_server.close()
+    time_cost.append((time.time()-time_start)*1000)
+    return time_cost
 
