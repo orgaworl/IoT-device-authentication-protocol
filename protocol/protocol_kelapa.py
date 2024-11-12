@@ -14,7 +14,7 @@ from common import get_random_num
 class Protocol_kelapa_c_action:
     def __init__(self,curve_name:str="Ed25519"):
         # 获取曲线的阶和生成元的点
-        self.curve = _curve.Curve()
+        self.curve = _curve.Curve(curve_name)
         self.order = self.curve.order
         self.generator_point = self.curve.generator_point
         self.private_key = 2024
@@ -40,7 +40,7 @@ class Protocol_kelapa_c_action:
         :param QR_string: 二维码的字符串解析
         :return: 临时密钥，kc的值
         """
-        kc = random.randint(1, self.order)              # 随机生成kc
+        kc = random.randint(2, self.order)              # 随机生成kc
         QR_hash = self.HashFunc.Hash(QR_string)             # 计算二维码的哈希值
         key = self.HashFunc.two_hashed_OPRF(kc, QR_string, QR_hash, self.order)  # 计算临时密钥
         return key, kc
@@ -54,6 +54,8 @@ class Protocol_kelapa_c_action:
         :return:
         """
         beta = pow(alpha, kc, self.order)
+        #print(f"{self.curve.curve_name}")
+        #print(f"cal beta:\n{alpha}\n{kc}\n{self.order}\n{beta}")
         return beta
 
     def compute_cipher(self, message, key: bytes) -> bytes:
@@ -139,6 +141,7 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     if debug:print(f"[key] recv <alpha>:\n[val] {hex(alpha)}")
     key, kc = IoT.compute_key(QR)  # 生成随机数kc和计算临时密钥key
     if debug:print(f"[key] cal <key>:\n[val] {key}")
+    if debug:print(f"[key] gen <kc>:\n[val] {kc}")
 
     # Step Three Iot设备计算身份标识公钥的密文和beta，发送给Iot主控设备
     
@@ -206,6 +209,7 @@ class Protocol_kelapa_s_action:
         """
         r = get_random_num.generate_prime(self.order)
         QR_string_hash = self.HashFunc.Hash(QR_string)
+        # print(f"pwd hash: {QR_string_hash}")
         temp = pow(QR_string_hash, r, self.order)
         # temp.to_bytes(sys.getsizeof(temp), byteorder='little', signed=False)
         alpha = str(temp)
@@ -223,11 +227,8 @@ class Protocol_kelapa_s_action:
         """
         r_inverse = inverse(r, self.order - 1)
         key = self.HashFunc.two_hashed_OPRF(r_inverse, QR_string, beta, self.order)
-
         decryptTest = self.SysmCipher.DeCrypt(key.encode(), cipher_iot)
-
         cipher_iots = self.SysmCipher.EnCrypt(key.encode(), self.curve.to_bytes(public_key_iots))
-
         return cipher_iots, self.curve.from_bytes(decryptTest), key
 
     def random_data_mark(self):
