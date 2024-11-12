@@ -135,21 +135,26 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     
     # Step Two  Iot设备接收alpha，计算临时密钥K
     alpha = socket_client.recv(1024).decode("UTF-8")  # 接受来自Iot主控设备的alpha
-    
     alpha = int(alpha)
-    if debug:print(f"[key] recv alpha:\n[val] {hex(alpha)}")
+    if debug:print(f"[key] recv <alpha>:\n[val] {hex(alpha)}")
     key, kc = IoT.compute_key(QR)  # 生成随机数kc和计算临时密钥key
+    if debug:print(f"[key] cal <key>:\n[val] {key}")
 
     # Step Three Iot设备计算身份标识公钥的密文和beta，发送给Iot主控设备
-    beta = IoT.compute_beta(alpha, kc)
+    
     cipher_iot = IoT.compute_cipher(IoT.public_key, key.encode('utf-8'))
     socket_client.send(cipher_iot)
+    if debug:print(f"[key] send <cipher>:\n[val] 0x{cipher_iot.hex()}")
+
+
+    beta = IoT.compute_beta(alpha, kc)
     socket_client.send(str(beta).encode("UTF-8"))
-    if debug:print(f"[key] send pk cipher:\n[val] 0x{cipher_iot.hex()}")
     if debug:print(f"[key] send beta:\n[val] {hex(beta)}", )
 
+    
     # Step Four Iot设备接收密文并解密，验证
-    cipher_iots = socket_client.recv(1024)  # 接受来自Iot主控设备的加密身份标识公钥bytes类型
+    cipher_iots = socket_client.recv(2048)  # 接受来自Iot主控设备的加密身份标识公钥bytes类型
+    if debug:print(f"[key] recv <pk cipher>:\n[val] 0x{cipher_iots.hex()}")
     public_key_iots = IoT.DeCrypt(0, cipher_iots, key.encode('utf-8'))   # 解密，point类型
 
     time_cost.append((time.time()-time_start)*1000)
@@ -202,6 +207,7 @@ class Protocol_kelapa_s_action:
         r = get_random_num.generate_prime(self.order)
         QR_string_hash = self.HashFunc.Hash(QR_string)
         temp = pow(QR_string_hash, r, self.order)
+        # temp.to_bytes(sys.getsizeof(temp), byteorder='little', signed=False)
         alpha = str(temp)
         return alpha, r
 
@@ -217,8 +223,11 @@ class Protocol_kelapa_s_action:
         """
         r_inverse = inverse(r, self.order - 1)
         key = self.HashFunc.two_hashed_OPRF(r_inverse, QR_string, beta, self.order)
+
         decryptTest = self.SysmCipher.DeCrypt(key.encode(), cipher_iot)
+
         cipher_iots = self.SysmCipher.EnCrypt(key.encode(), self.curve.to_bytes(public_key_iots))
+
         return cipher_iots, self.curve.from_bytes(decryptTest), key
 
     def random_data_mark(self):
@@ -269,23 +278,35 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     # Step One  IoT主控设备扫码
     QR = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     if debug:print(f"[key] scan qrcode:\n[val] {QR} ")
+
     # Step Two  IoT主控设备发送alpha
     alpha, r = IoTs.generate_alpha(QR)      # alpha是字符串类型
-    if debug:print(f"[key] gen and send alpha:\n[val] {alpha} ")
+    if debug:print(f"[key] cal <alpha>:\n[val] {alpha} ")
+    if debug:print(f"[key] cal <r>:\n[val] {r} ")
+    if debug:print(f"[com] send <alpha>")
     conn.send(alpha.encode("UTF-8"))        # 发送bytes类型
     
 
     # Step Three  IoT主控接收beta与密文
-    cipher_iot = conn.recv(1024)
+    cipher_iot = conn.recv(2048)
+    if debug:print(f"[key] recv <cipher>:\n[val] {cipher_iot.hex()}")
+    
     beta = conn.recv(1024).decode("UTF-8")    # 接收到的beta转str类型
+    
     beta = int(beta)
+    if debug:print(f"[key] recv <beta>:\n[val] {hex(beta)} ")
+    
 
     # Step Four   IoT主控计算临时密钥K，解密密文，验证密文，发送加密后的自己的身份标识公钥
     cipher_iots, public_key_iot, key = IoTs.compute_key_cipher(QR, r, beta, cipher_iot, IoTs.public_key)
+    if debug:print(f"[key] cal <encrypted pk> of control device:\n[val] 0x{cipher_iots} ")
+    if debug:print(f"[key] decrypt for <pk> of controlled device:\n[val] 0x{public_key_iot} ")
+    if debug:print(f"[key] cal <tmp key>:\n[val] 0x{key} ")
+    if debug:print(f"[com] verify pk cipher success")    
+    
     conn.send(cipher_iots)  # 发送加密后的身份标识公钥
     #print(f"[key] IoT主控设备发送的身份标识公钥密文:\n[val] 0x{cipher_iots.hex()} ")
-    if debug:print(f"[key] recv <encrypted pk>:\n[val] 0x{cipher_iots.hex()} ")
-    if debug:print(f"[com] verify pk cipher success")
+    if debug:print(f"[key] send <pk cipher>:\n[val] 0x{cipher_iots.hex()} ")
 
 
     time_cost.append((time.time()-time_start)*1000)

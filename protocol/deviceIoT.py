@@ -10,7 +10,7 @@ from protocol_harmony import Protocol_harmony_c
 
 
 
-def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTime=3,passwdLen=100):
+def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTime=10,passwdLen=100):
     import time
     import pandas as pd
     import numpy as np
@@ -35,7 +35,7 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
                 phase_time_list.append((end_time-start_time)*1000)
                 if testTime>=benchmark_init_time:
                     time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
-                time.sleep(0.2)
+                time.sleep(0.9)
             except socket.error:
                 print("[ERR] socket Error")
             except Exception as e:
@@ -54,7 +54,7 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     # plt.show()
 
     # save data
-    with open(f"../benchmark/{protocol.__name__}_IoT_device.csv",mode="w",encoding="utf-8") as f:
+    with open(f"../benchmark/{protocol.__name__}_controlled_device.csv",mode="w",encoding="utf-8") as f:
         df=pd.DataFrame()
         df.insert(loc=len(df.columns),column='curve',value=tested_curve_list)
         df.insert(loc=len(df.columns),column='phase1 cost',value=res_[:,0])

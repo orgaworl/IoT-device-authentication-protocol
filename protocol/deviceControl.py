@@ -19,7 +19,7 @@ Options:
 '''
 
 
-def bench_mark(protocol,HOST: str, port: int,debug:bool=False,loopTime=100):
+def bench_mark(protocol,HOST: str, port: int,debug:bool=False,loopTime=10):
     import time
     import pandas as pd
     import numpy as np
@@ -41,11 +41,11 @@ def bench_mark(protocol,HOST: str, port: int,debug:bool=False,loopTime=100):
                 phase_time_list.append((end_time-start_time)*1000)
                 if testTime>=benchmark_init_time:
                     time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
-                time.sleep(0.5)
+                time.sleep(0.9)
             except socket.error:
                 print("[ERR] socket Error")
             except Exception as e:
-                print(f"[ERR] unknow")
+                print(f"[ERR] {e}")
 
             
         #print(time_cost_matrix)
@@ -58,7 +58,7 @@ def bench_mark(protocol,HOST: str, port: int,debug:bool=False,loopTime=100):
 
 
     # save data
-    with open(f"../benchmark/{protocol.__name__}_IoT_device.csv",mode="w",encoding="utf-8") as f:
+    with open(f"../benchmark/{protocol.__name__}_control_device.csv",mode="w",encoding="utf-8") as f:
         df=pd.DataFrame()
         df.insert(loc=len(df.columns),column='curve',value=tested_curve_list)
         df.insert(loc=len(df.columns),column='phase1 cost',value=res_[:,0])
@@ -123,5 +123,6 @@ if __name__ == '__main__':
                 print(f"-------- waiting for {count}th connection --------")
                 protocol(HOST, port,curve_name,debug_flag)
             except Exception as e:
-                print(f"[ERR]{e}")
+                print(f"[ERR] *")
             count+=1
+            break

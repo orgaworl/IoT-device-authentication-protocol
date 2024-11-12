@@ -21,23 +21,29 @@ class SM4:
         return key
     
     def EnCrypt(self,key:bytes,data:bytes)->bytes:
+        print(f"*****encry key:{key.hex()}\n*****plain:{data.hex()}")
         key = self.PadKey(key)
+        #print(f"before pad:{data.hex()}")
         data=pad(data,self.block_size)
-        
+        #print(f"after pad:{data.hex()}")
         sm4=Sm4(key,DO_ENCRYPT)
         res=bytes()
         for i in range(len(data)//self.block_size):
             res+=sm4.encrypt(data[self.block_size*i:self.block_size*(i+1)])
+        print(f"*****cipher:{res.hex()}")
         return res
     
     
     def DeCrypt(self,key:bytes,data:bytes)->bytes:
+        print(f"***** decry key:{key.hex()}\n*****cipher:{data.hex()}")
         key = self.PadKey(key)
         sm4=Sm4(key,DO_DECRYPT)
         res=bytes()
         for i in range(len(data)//self.block_size):
             res+=sm4.encrypt(data[self.block_size*i:self.block_size*(i+1)])
+        #print(f"before unpad:{res.hex()}")
         res=unpad(res,self.block_size)
+        print(f"*****plain:{res.hex()}")
         return res
 
 
