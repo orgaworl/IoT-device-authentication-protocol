@@ -128,7 +128,7 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
 
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
-    time_start= time.time()
+    time_start_1= time.time()
     # Step One Iot设备生成二维码或者PIN码
     if debug:print(f"[key] passwd:\n[val] {passwd}")
     QR = IoT.create_QR(passwd)
@@ -160,9 +160,9 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     if debug:print(f"[key] recv <pk cipher>:\n[val] 0x{cipher_iots.hex()}")
     public_key_iots = IoT.DeCrypt(0, cipher_iots, key.encode('utf-8'))   # 解密，point类型
 
-    time_cost.append((time.time()-time_start)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     # ------------------------- phase 2 -------------------------------
-    time_start= time.time()
+    time_start_2= time.time()
     # Step Five Iot设备计算Y并发送
     Y, y = IoT.random_data_mark()
     socket_client.send(IoT.curve.to_bytes(Y))
@@ -176,10 +176,11 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     # Step Seven - Nine  Iot设备计算会话密钥ssk
     ssk = IoT.compute_ssk(X, Y, y, public_key_iots, IoT.public_key, IoT.private_key)
     if debug:print(f"[key] gen session key:\n[val] {hex(ssk)}")
+    time_cost.append((time.time()-time_start_2)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     print(f"[SUC] {hex(ssk)}")
     # 关闭连接
     socket_client.close()
-    time_cost.append((time.time()-time_start)*1000)
     return time_cost
     
 
@@ -275,7 +276,7 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
 
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
-    time_start= time.time()
+    time_start_1= time.time()
     # Step One  IoT主控设备扫码
     QR = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     if debug:print(f"[key] scan qrcode:\n[val] {QR} ")
@@ -310,9 +311,9 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     if debug:print(f"[key] send <pk cipher>:\n[val] 0x{cipher_iots.hex()} ")
 
 
-    time_cost.append((time.time()-time_start)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     # ------------------------- phase 2 -------------------------------
-    time_start= time.time()
+    time_start_2= time.time()
     # Step Five   IoT主控设备接收Y,转为点类型
     Y_data = conn.recv(1024)
     Y = IoTs.curve.from_bytes(Y_data)
@@ -324,10 +325,12 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
 
     # Step Seven - Nine  协商会话密钥ssk
     ssk = IoTs.compute_ssk(X, Y, x, IoTs.public_key, public_key_iot, IoTs.private_key)
+    time_cost.append((time.time()-time_start_2)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     print(f"[SUC] {hex(ssk)}")
     # 关闭连接
     conn.close()
     socket_server.close()
-    time_cost.append((time.time()-time_start)*1000)
+    
     return time_cost
 

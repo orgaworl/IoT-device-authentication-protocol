@@ -18,49 +18,51 @@ Options:
     <--debug>               Print protocol parameters.
 '''
 
-
-def bench_mark(protocol,HOST: str, port: int,debug:bool=False,loopTime=10):
+def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTime=100,passwdLen=100):
     import time
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
+    # get time
 
+    # loop
     
-    curve_names=[item["name"] for item in supportEC.curves]
+    
     res_=np.ndarray(shape=(0,3))
     tested_curve_list=[]
-    for curve_name in curve_names:
+    for curve in supportEC.curves[:5]:
         time_cost_matrix=np.ndarray(shape=(0,3))
-        print(f"Testing {curve_name}...")
+        print(f"Testing {curve["name"]}...")
         benchmark_init_time=10
         for testTime in range(benchmark_init_time+loopTime):
             try:
-                start_time=time.time()
-                phase_time_list=protocol(HOST, int(port),curve_name,debug)
-                end_time=time.time()
-                phase_time_list.append((end_time-start_time)*1000)
+                phase_time_list=protocol(HOST, int(port),curve["name"],debug)
                 if testTime>=benchmark_init_time:
                     time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
-                time.sleep(0.9)
+                time.sleep(0.8)
             except socket.error:
                 print("[ERR] socket Error")
             except Exception as e:
                 print(f"[ERR] {e}")
 
-            
         #print(time_cost_matrix)
         row_len=time_cost_matrix.shape[0]
         try:
+            print(res_)
             res_=np.vstack((res_,[sum(time_cost_matrix[:,0])/row_len, sum(time_cost_matrix[:,1])/row_len, sum(time_cost_matrix[:,2])/row_len]))
-            tested_curve_list.append(curve_name)
+            tested_curve_list.append(curve)
         except Exception as e:
             print(f"[ERR] unknow")
 
+    # show
+    # plt.plot([i+1 for i in range(len(timeList))],timeList)
+    # plt.show()
 
     # save data
     with open(f"../benchmark/{protocol.__name__}_control_device.csv",mode="w",encoding="utf-8") as f:
         df=pd.DataFrame()
-        df.insert(loc=len(df.columns),column='curve',value=tested_curve_list)
+        df.insert(loc=len(df.columns),column='curve',value=[curve["name"] for curve in tested_curve_list])
+        df.insert(loc=len(df.columns),column='size',value=[curve["size"] for curve in tested_curve_list])
         df.insert(loc=len(df.columns),column='phase1 cost',value=res_[:,0])
         df.insert(loc=len(df.columns),column='phase2 cost',value=res_[:,1])
         df.insert(loc=len(df.columns),column='total cost',value=res_[:,2])

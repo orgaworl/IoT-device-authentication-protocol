@@ -1,9 +1,12 @@
-# self config
+# config
 */test_QR.png
 */node_modules
+*/*.csv
 
-/benchmark/*.svg
-/benchmark/*.csv
+
+
+# ---------------------------------------------
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
