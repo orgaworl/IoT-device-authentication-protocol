@@ -179,7 +179,7 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
     # ------------------------- phase 1 -------------------------------
     # Step One Iot设备生成二维码或者PIN码以及盐
     time_cost=[]
-    time_start = time.time()
+    time_start_1 = time.time()
     QR = IoT.create_QR(passwd)
     salt = IoT.create_salt()
     socket_client.send((QR+salt).encode("UTF-8"))
@@ -218,11 +218,11 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
     cipher = socket_client.recv(1024)
     public_key_iots = IoT.decrypt(K, cipher)
 
-    time_cost.append((time.time()-time_start)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
 
 
     # ------------------------- phase 2 -------------------------------
-    time_start = time.time()
+    time_start_2 = time.time()
     # Step Ten IoT设备接收Y，生成Z和z
     Y = socket_client.recv(1024)
     Z, z = IoT.random_data()
@@ -240,7 +240,8 @@ def Protocol_harmony_c(HOST: str, port: int, passwd:str,curve_name:str="Ed25519"
 
     # Step 15 IoT设备解密并验证签名
     IoT.dec_vrfy(cipher_iots, ssk, Z, Y, public_key_iots)
-    time_cost.append((time.time()-time_start)*1000)
+    time_cost.append((time.time()-time_start_2)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     print(f"[SUC] 0x{ssk.hex()}")
 
     return time_cost
@@ -423,7 +424,7 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
-    time_start=time.time()
+    time_start_1=time.time()
     # Step One  IoT主控设备扫码计算x
     QR_salt = conn.recv(1024).decode("UTF-8")    # 接收pwd，str类型
     x = IoTs.compute_x(QR_salt)
@@ -465,11 +466,11 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     conn.send(c2)
     if debug: print(f"[key] send parameter <encrypted identity public key>\n[val] {c2}")
 
-    time_cost.append((time.time()-time_start)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     
     
     # ------------------------- phase 2 -------------------------------
-    time_start=time.time()
+    time_start_2=time.time()
     # Step ten IoT主控设备生成随机数y和点Y
     Y, y = IoTs.random_data()
     if debug: print(f"[key] send parameter <Y>\n[val]{Y}")
@@ -492,5 +493,6 @@ def Protocol_harmony_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=
     # 关闭连接
     conn.close()
     socket_server.close()
-    time_cost.append((time.time()-time_start)*1000)
+    time_cost.append((time.time()-time_start_2)*1000)
+    time_cost.append((time.time()-time_start_1)*1000)
     return time_cost

@@ -28,11 +28,11 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
                 phase_time_list=protocol(HOST, int(port),passwd,curve["name"],debug)
                 if testTime>=benchmark_init_time:
                     time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
-                time.sleep(0.9)
+                time.sleep(0.15)
             except socket.error:
                 print("[ERR] socket Error")
             except Exception as e:
-                print(f"[ERR] ")
+                print(f"[ERR] {e}")
 
         #print(time_cost_matrix)
         row_len=time_cost_matrix.shape[0]
