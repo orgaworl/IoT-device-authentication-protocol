@@ -15,16 +15,13 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
-    # get time
 
-    # loop
-    
-    
+
     res_=np.ndarray(shape=(0,3))
     tested_curve_list=[]
     for curve in supportEC.curves:
         time_cost_matrix=np.ndarray(shape=(0,3))
-        print(f"Testing {curve["name"]}...")
+        print(f'Testing {curve["name"]}...')
         benchmark_init_time=10
         for testTime in range(benchmark_init_time+loopTime):
             try:
@@ -45,9 +42,6 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
         except Exception as e:
             print(f"[ERR] unknow")
 
-    # show
-    # plt.plot([i+1 for i in range(len(timeList))],timeList)
-    # plt.show()
 
     # save data
     with open(f"../benchmark/{protocol.__name__}_controlled_device.csv",mode="w",encoding="utf-8") as f:

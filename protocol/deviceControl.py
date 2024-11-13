@@ -32,7 +32,7 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     tested_curve_list=[]
     for curve in supportEC.curves:
         time_cost_matrix=np.ndarray(shape=(0,3))
-        print(f"Testing {curve["name"]}...")
+        print(f'Testing {curve["name"]}...')
         benchmark_init_time=10
         for testTime in range(benchmark_init_time+loopTime):
             try:
