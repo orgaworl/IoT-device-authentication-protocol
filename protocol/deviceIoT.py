@@ -22,16 +22,13 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     
     res_=np.ndarray(shape=(0,3))
     tested_curve_list=[]
-    for curve in supportEC.curves[:5]:
+    for curve in supportEC.curves:
         time_cost_matrix=np.ndarray(shape=(0,3))
         print(f"Testing {curve["name"]}...")
         benchmark_init_time=10
         for testTime in range(benchmark_init_time+loopTime):
             try:
-                #start_time=time.time()
                 phase_time_list=protocol(HOST, int(port),passwd,curve["name"],debug)
-                #end_time=time.time()
-                #phase_time_list.append((end_time-start_time)*1000)
                 if testTime>=benchmark_init_time:
                     time_cost_matrix=np.vstack((time_cost_matrix,phase_time_list))
                 time.sleep(0.9)
