@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     //require("child_process").spawn("C:\\Program Files\\010 Editor.exe");
     var python = require("child_process").spawn("python", [
-      path.join(__dirname, "/../../protocol/progClient.py"),
+      path.join(__dirname, "/../../protocol/deviceIoT.py"),
       "--ip=" + host,
       "--port=" + port,
       "--passwd=" + passwd,

@@ -55,7 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
     var python = require("child_process").spawn(
       "python",
       [
-        path.join(__dirname, "/../../protocol/progServer.py"),
+        path.join(__dirname, "/../../protocol/deviceControl.py"),
         "--ip=" + host,
         "--port=" + port,
         "--protocol=" + protocol,
