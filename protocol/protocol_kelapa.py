@@ -123,8 +123,16 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     """
     # 系统初始化
     IoT = Protocol_kelapa_c_action(curve_name)
-    socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    socket_client.connect((HOST, port))
+
+    # 建立socket 连接
+    # conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # conn.connect((HOST, port))
+
+    socket_protocol = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket_protocol.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    socket_protocol.bind((HOST, port))
+    socket_protocol.listen(1)
+    conn, address = socket_protocol.accept()
 
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
@@ -132,11 +140,11 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     # Step One Iot设备生成二维码或者PIN码
     if debug:print(f"[key] passwd:\n[val] {passwd}")
     QR = IoT.create_QR(passwd)
-    socket_client.send(QR.encode("UTF-8"))
+    conn.send(QR.encode("UTF-8"))
     if debug:print(f"[com] gen qrcode")
     
     # Step Two  Iot设备接收alpha，计算临时密钥K
-    alpha = socket_client.recv(1024).decode("UTF-8")  # 接受来自Iot主控设备的alpha
+    alpha = conn.recv(1024).decode("UTF-8")  # 接受来自Iot主控设备的alpha
     alpha = int(alpha)
     if debug:print(f"[key] recv <alpha>:\n[val] {hex(alpha)}")
     key, kc = IoT.compute_key(QR)  # 生成随机数kc和计算临时密钥key
@@ -146,17 +154,17 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     # Step Three Iot设备计算身份标识公钥的密文和beta，发送给Iot主控设备
     
     cipher_iot = IoT.compute_cipher(IoT.public_key, key.encode('utf-8'))
-    socket_client.send(cipher_iot)
+    conn.send(cipher_iot)
     if debug:print(f"[key] send <cipher>:\n[val] 0x{cipher_iot.hex()}")
 
 
     beta = IoT.compute_beta(alpha, kc)
-    socket_client.send(str(beta).encode("UTF-8"))
+    conn.send(str(beta).encode("UTF-8"))
     if debug:print(f"[key] send beta:\n[val] {hex(beta)}", )
 
     
     # Step Four Iot设备接收密文并解密，验证
-    cipher_iots = socket_client.recv(2048)  # 接受来自Iot主控设备的加密身份标识公钥bytes类型
+    cipher_iots = conn.recv(2048)  # 接受来自Iot主控设备的加密身份标识公钥bytes类型
     if debug:print(f"[key] recv <pk cipher>:\n[val] 0x{cipher_iots.hex()}")
     public_key_iots = IoT.DeCrypt(0, cipher_iots, key.encode('utf-8'))   # 解密，point类型
 
@@ -165,11 +173,11 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     time_start_2= time.time()
     # Step Five Iot设备计算Y并发送
     Y, y = IoT.random_data_mark()
-    socket_client.send(IoT.curve.to_bytes(Y))
+    conn.send(IoT.curve.to_bytes(Y))
     if debug:print("[com] verify pk")
     
     # Step Six  Iot设备接收X
-    X_data = socket_client.recv(1024)
+    X_data = conn.recv(1024)
     X = IoT.curve.from_bytes(X_data)    # 接受来自Iot主控设备的X(point类型)
     if debug:print(f"[key] send Y:\n[val] {hex(Y.x)}{hex(Y.y)[2:]}")
     
@@ -180,7 +188,8 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     time_cost.append((time.time()-time_start_1)*1000)
     print(f"[SUC] {hex(ssk)}")
     # 关闭连接
-    socket_client.close()
+    conn.close()
+    socket_protocol.close()
     return time_cost
     
 
@@ -265,15 +274,15 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     """
     IoTs = Protocol_kelapa_s_action(curve_name)
     # 建立socket连接
-    socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # 端口号复用
-    socket_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    socket_server.bind((HOST, port))
-    # 监听端口
-    socket_server.listen(1)
-    conn, address = socket_server.accept()
 
+    # socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # socket_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # socket_server.bind((HOST, port))
+    # socket_server.listen(1)
+    # conn, address = socket_server.accept()
 
+    conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    conn.connect((HOST, port))
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
     time_start_1= time.time()
@@ -330,7 +339,7 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     print(f"[SUC] {hex(ssk)}")
     # 关闭连接
     conn.close()
-    socket_server.close()
+    #socket_server.close()
     
     return time_cost
 

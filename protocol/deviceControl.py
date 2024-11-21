@@ -119,12 +119,13 @@ if __name__ == '__main__':
     if (benchmark_flag==True):
         bench_mark(protocol,HOST,port,debug_flag)
     else:
-        count=1
-        while(1):
-            try:
-                print(f"-------- waiting for {count}th connection --------")
-                protocol(HOST, port,curve_name,debug_flag)
-            except Exception as e:
-                print(f"[ERR] *")
-            count+=1
-            break
+        protocol(HOST, port,curve_name,debug_flag)
+        # count=1
+        # while(1):
+        #     try:
+        #         print(f"-------- waiting for {count}th connection --------")
+        #         protocol(HOST, port,curve_name,debug_flag)
+        #     except Exception as e:
+        #         print(f"[ERR] {e}")
+        #     count+=1
+        #     break

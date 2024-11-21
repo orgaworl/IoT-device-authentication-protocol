@@ -123,14 +123,15 @@ if __name__ == '__main__':
     if(benchmark_flag==1):
         bench_mark(protocol,HOST, int(port),passwd,debug)
     elif(benchmark_flag==0):
-        try:
-            protocol(HOST, int(port),passwd,curve_name,debug)
-        except socket.timeout:
-            print("[ERR] socket timeout")
-        except socket.error:
-            print("[ERR] socket error")
-        except Exception as e:
-            print(f"[ERR] {e}")
+        protocol(HOST, int(port),passwd,curve_name,debug)
+        # try:
+        #     protocol(HOST, int(port),passwd,curve_name,debug)
+        # except socket.timeout:
+        #     print("[ERR] socket timeout")
+        # except socket.error:
+        #     print("[ERR] socket error")
+        # except Exception as e:
+        #     print(f"[ERR] {e}")
 
 
 
