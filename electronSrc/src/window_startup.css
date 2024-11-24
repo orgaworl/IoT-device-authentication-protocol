@@ -49,6 +49,7 @@ button{
     color:#5e81ac;
 
 }
+
 /*----------------------------------------------------------*/
 
 header {
@@ -120,7 +121,11 @@ header li {
 }
 
 /*----------------------------------------------------------*/
-
+body{
+    /* background:linear-gradient(45deg,DodgerBlue,DarkTurquoise,LightSkyBlue); */
+    background: rgb(100,129,205);
+background: linear-gradient(29deg, rgba(100,129,205,1) 0%, rgba(114,187,203,1) 59%, rgba(0,212,255,0.7399334733893557) 100%);
+}
 main {
     width: 100%;
     height: 100%;

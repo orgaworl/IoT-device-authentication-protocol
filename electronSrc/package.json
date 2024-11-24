@@ -6,9 +6,9 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "auto": "nodemon --watch main.js --exec electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "auto": "nodemon --watch main.js --exec electron-forge start"
   },
   "repository": "https://github.com/orgaworl/IoT-device-authentication-protocol",
   "keywords": [

@@ -125,15 +125,13 @@ def Protocol_kelapa_c(HOST: str, port: int,passwd:str,curve_name:str="Ed25519",d
     IoT = Protocol_kelapa_c_action(curve_name)
 
     # 建立socket 连接
-    # conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # conn.connect((HOST, port))
-
     socket_protocol = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_protocol.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     socket_protocol.bind((HOST, port))
     socket_protocol.listen(1)
+    #socket.setdefaulttimeout(5)
     conn, address = socket_protocol.accept()
-
+    conn.settimeout(5)
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
     time_start_1= time.time()
@@ -274,15 +272,11 @@ def Protocol_kelapa_s(HOST: str, port: int,curve_name:str="Ed25519",debug:bool=F
     """
     IoTs = Protocol_kelapa_s_action(curve_name)
     # 建立socket连接
-
-    # socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # socket_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    # socket_server.bind((HOST, port))
-    # socket_server.listen(1)
-    # conn, address = socket_server.accept()
-
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((HOST, port))
+    conn.settimeout(5)
+    print("[com] connect to IoT device successful")
+
     # ------------------------- phase 1 -------------------------------
     time_cost=[]
     time_start_1= time.time()

@@ -27,16 +27,10 @@ window.addEventListener("DOMContentLoaded", () => {
     mainWindow.close();
   });
 
-
-
-  var childProcess=[];
   // 监视提交表单事件
   const configButton = document.querySelector("#config");
   configButton.addEventListener("submit", function (event) {
     event.preventDefault(); // stop the form from submitting
-    // 表明正在运行
-
-    // 启动子进程
     let host = document.getElementById("config-host").value;
     if (host == "") {
       host = "127.0.0.1";
@@ -45,28 +39,30 @@ window.addEventListener("DOMContentLoaded", () => {
     if (port == "") {
       port = "4398";
     }
-    var protocol = document.querySelector(
+    let protocol = document.querySelector(
       'input[name="options"]:checked'
     ).value;
     if (protocol == "") {
       protocol = "kelapa";
     }
-    //require("child_process").spawn("C:\\Program Files\\010 Editor.exe");
-    var python = require("child_process").spawn(
-      "python",
-      [
-        path.join(__dirname, "/../../protocol/deviceControl.py"),
-        "--ip=" + host,
-        "--port=" + port,
-        "--protocol=" + protocol,
-      ],
-      { stdio: "pipe" }
-    );
-    // 记录子进程
-    childProcess.push(python);
-    python.stdout.on("data", function (data) {
-      // INSERT P
+    additionOptions="";
+    let is_hidden_detail=document.getElementById("option-hidden-detail").checked;
+    if (!is_hidden_detail) {
+      additionOptions+='--debug'
+    }
+    
+    // start sub process
+    var python = require("child_process").spawn("python", [
+      path.join(__dirname, "/../../protocol/deviceIoT.py"),
+      "--ip=" + host,
+      "--port=" + port,
+      // "--passwd=" + passwd,
+      "--protocol=" + protocol,
+      additionOptions,
+    ]);
 
+     // INSERT P , show log
+    python.stdout.on("data", function (data) {
       var contentPart = document.createElement("p");
       contentPart.innerText = data.toString("utf8");
       contentPart.className = "log-font";
@@ -75,32 +71,43 @@ window.addEventListener("DOMContentLoaded", () => {
       display_window.appendChild(contentPart);
     });
 
+    // insert qr code
+    let qr_image = document.createElement("img");
+    qr_image.src =
+      path.join(__dirname, "/../test_QR.png") + "?" + new Date().getTime();
+    qr_image.id = "qr-image";
+    let qr_windows = document.getElementById("qr-box");
+    qr_windows.innerHTML = "";
+    qr_windows.appendChild(qr_image);
+    //reloadImage("qr-image");
+
+    // 插入运行状态信息
+    let status = document.getElementById("msg-box").children[0];
+    status.innerHTML = "RUNNING"+"<br>"+protocol;
+
+    // 监视错误信息
     python.stderr.on("data", (data) => {
       console.error(`stderr: ${data}`);
     });
 
-    // insert status box
-    let status = document.getElementById("qr-box").children[0];
-    status.innerHTML = "RUNNING"+"<br>"+protocol;
-    
-    //
     python.on("close", (code) => {
       console.log(`child process exited with code ${code}`);
-      status.innerHTML = "STOP";
-
+      status.innerHTML="Successful <br> Authentication"
     });
   });
   // 监视reset事件
   configButton.addEventListener("reset", function (event) {
-    event.preventDefault();
-    for(i in childProcess){
-      childProcess[i].kill();
-    }
+    event.preventDefault(); // stop the form from submitting
+    // let config_form = document.getElementById("config");
+    // config_form.reset();
+
+    let msg_box = document.getElementById("msg-box").children[0];
+    msg_box.innerHTML = "";
+
     let display_window = document.getElementById("display-box");
     display_window.innerHTML = "";
 
-    // 修改运行状态提示
-    let status = document.getElementById("qr-box").children[0];
-    status.innerHTML = "RUNNING"+"<br>"+protocol;
+    let qr_windows = document.getElementById("qr-box");
+    qr_windows.innerHTML = "";
   });
 });

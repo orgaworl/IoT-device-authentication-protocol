@@ -188,7 +188,7 @@ def Protocol_harmony_c(
     socket_protocol.bind((HOST, port))
     socket_protocol.listen(1)
     conn, address = socket_protocol.accept()
-
+    conn.settimeout(5)
 
     # 协议开始
     # ------------------------- phase 1 -------------------------------
@@ -431,25 +431,14 @@ def Protocol_harmony_s(
     :param port: 端口号
     :return:
     """
-
+    # 系统初始化
     IoTs = Protocol_harmony_s_action(curve_name)
 
-    # # 建立socket连接
-    # socket_protocol = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # # 端口号复用
-
-    # socket_protocol.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    # socket_protocol.bind((HOST, port))
-    # # 监听端口
-    # socket_protocol.listen(1)
-    # conn, address = socket_protocol.accept()
 
     # 创建socket对象
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # 连接到服务器
     conn.connect((HOST, port))
-
+    conn.settimeout(5)
     # ------------------------- phase 1 -------------------------------
     time_cost = []
     time_start_1 = time.time()

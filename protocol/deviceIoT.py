@@ -1,5 +1,6 @@
 
 import socket
+import time
 import random
 import sys, getopt
 from common import supportEC
@@ -83,7 +84,7 @@ if __name__ == '__main__':
     HOST="127.0.0.1"
     #HOST="192.168.31.222"
     port = 4398
-    passwd="passwd"
+    passwd=random.randbytes(16).hex()
     protocol=Protocol_kelapa_c
     benchmark_flag=0
     debug=False
@@ -123,15 +124,20 @@ if __name__ == '__main__':
     if(benchmark_flag==1):
         bench_mark(protocol,HOST, int(port),passwd,debug)
     elif(benchmark_flag==0):
-        protocol(HOST, int(port),passwd,curve_name,debug)
-        # try:
-        #     protocol(HOST, int(port),passwd,curve_name,debug)
-        # except socket.timeout:
-        #     print("[ERR] socket timeout")
-        # except socket.error:
-        #     print("[ERR] socket error")
-        # except Exception as e:
-        #     print(f"[ERR] {e}")
+        # 不断等待连接, 直到协议运行并成功协商出密钥
+        while(True):
+            try:
+                print("waiting for connection...")
+                protocol(HOST, int(port),passwd,curve_name,debug)
+                time.sleep(1)
+                break
+            except socket.timeout:
+                print("[ERR] socket timeout")
+            except socket.error:
+                print("[ERR] socket error")
+            except Exception as e:
+                print(f"[ERR] {e}")
+                
 
 
 

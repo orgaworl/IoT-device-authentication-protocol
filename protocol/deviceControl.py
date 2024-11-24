@@ -119,13 +119,12 @@ if __name__ == '__main__':
     if (benchmark_flag==True):
         bench_mark(protocol,HOST,port,debug_flag)
     else:
-        protocol(HOST, port,curve_name,debug_flag)
-        # count=1
-        # while(1):
-        #     try:
-        #         print(f"-------- waiting for {count}th connection --------")
-        #         protocol(HOST, port,curve_name,debug_flag)
-        #     except Exception as e:
-        #         print(f"[ERR] {e}")
-        #     count+=1
-        #     break
+        try:
+            #print(f"try to connect to IoT device at {HOST}:{port}...")
+            protocol(HOST, port,curve_name,debug_flag)
+        except socket.timeout:
+            print("[ERR] socket timeout")
+        except socket.error:
+            print("[ERR] socket error")
+        except Exception as e:
+            print(f"[ERR] protocol running error")

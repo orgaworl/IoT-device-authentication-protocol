@@ -5,6 +5,7 @@ const { ipcMain } = require("electron");
 
 function createStartupWindow() {
   const mainWindow = new BrowserWindow({
+    transparent: true,
     autoHideMenuBar: true,
     frame: false,
     x: 200,
@@ -25,15 +26,18 @@ function createStartupWindow() {
   require("@electron/remote/main").enable(mainWindow.webContents);
 
   //
-  mainWindow.loadFile(path.join(__dirname, "startup.html"));
+  mainWindow.loadFile(path.join(__dirname, "window_startup.html"));
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
+  return mainWindow;
+
 }
 
 function createClientWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    transparent: true,
     autoHideMenuBar: true,
     frame: false,
     x: 250,
@@ -52,15 +56,44 @@ function createClientWindow() {
   //
   //require("@electron/remote/main").initialize();
   require("@electron/remote/main").enable(mainWindow.webContents);
-  mainWindow.loadFile(path.join(__dirname, "app-client.html"));
+  mainWindow.loadFile(path.join(__dirname, "window_for_IoT_device.html"));
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
+  return mainWindow;
 }
 
 function createServerWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    transparent: true,
+    autoHideMenuBar: true,
+    frame: false,
+    x: 300,
+    y: 250,
+    width: 1000,
+    minWidth: 900,
+    height: 700,
+    minHeight: 520,
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+  //require("@electron/remote/main").initialize();
+  require("@electron/remote/main").enable(mainWindow.webContents);
+  mainWindow.loadFile(path.join(__dirname, "window_for_control_device.html"));
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+  });
+  return mainWindow;
+}
+
+function create_loading_page() {
+  const mainWindow = new BrowserWindow({
+    transparent: true,
     autoHideMenuBar: true,
     frame: false,
     x: 300,
@@ -76,14 +109,13 @@ function createServerWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-
-  //
-  //require("@electron/remote/main").initialize();
   require("@electron/remote/main").enable(mainWindow.webContents);
-  mainWindow.loadFile(path.join(__dirname, "app-server.html"));
+  mainWindow.loadFile(path.join(__dirname, "/component/loading_page.html"));
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
+  return mainWindow;
+
 }
 
 app.whenReady().then(() => {
@@ -100,6 +132,19 @@ app.whenReady().then(() => {
 ipcMain.on("startup client app", (event, arg) => {
   createClientWindow();
 });
+let server_window=null;
 ipcMain.on("startup server app", (event, arg) => {
-  createServerWindow();
+  server_window=createServerWindow();
 });
+// let loading_page=null;
+// ipcMain.on("startup loading page", (event, arg) => {
+//   loading_page = create_loading_page();
+//   server_window.hide();
+// });
+// ipcMain.on("close loading page", (event, arg) => {
+//   setTimeout(function() {
+//     console.log("wait");
+//   }, 2000);
+//   loading_page.close();
+//   server_window.show();
+// });

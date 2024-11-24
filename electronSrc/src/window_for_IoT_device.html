@@ -5,16 +5,16 @@
         <meta
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
-        <link href="app-client.css" rel="stylesheet" />
+        <link href="common.css" rel="stylesheet" />
         <title>IoT Device Authentication</title>
     </head>
 
     <body>
-        <script src="app-server.js"></script>
+        <script src="window_for_IoT_device.js"></script>
         <header>
             <div class="title-bar">
                 <div class="title">
-                    <p>IoT Device Authentication</p>
+                    <p>IoT Device Authentication: IoT device end </p>
                 </div>
 
                 <div class="menu-items">
@@ -56,13 +56,13 @@
             <div id="above-box">
                 <div>
                     <div>
-                        <h2>总控设备运行参数</h2>
+                        <h2>物联网设备运行参数</h2>
                     </div>
                     <div class="config-box">
                         <form action="#" id="config">
                             <div class="flex-space-between">
                                 <div class="div-font-box">
-                                    <label for="host">ip</label>
+                                    <label for="host">local IP address</label>
                                 </div>
                                 <div class="div-font-box">
                                     <input type="text" id="config-host"
@@ -78,6 +78,17 @@
                                         placeholder="4398" />
                                 </div>
                             </div>
+                            <!-- <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label for="passwd">passwd</label>
+                                </div>
+                                <div class="div-font-box">
+                                    <input
+                                        type="password"
+                                        id="config-passwd"
+                                        placeholder="passwd" />
+                                </div>
+                            </div> -->
                             <div class="flex-space-between">
                                 <div class="div-font-box">
                                     <label for="passwd">protocol</label>
@@ -87,7 +98,8 @@
                                         type="radio"
                                         id="option-kelapa"
                                         name="options"
-                                        value="kelapa" checked />
+                                        value="kelapa"
+                                        checked />
                                     <label for="option-kelapa">kelapa</label>
                                     <input
                                         type="radio"
@@ -98,6 +110,22 @@
                                         for="option-harmony">harmony</label><br />
                                 </div>
                             </div>
+                            <div class="flex-space-between">
+                                <div class="div-font-box">
+                                    <label>hidden detail</label>
+                                </div>
+                                <input
+                                    id="option-hidden-detail"
+                                    type="checkbox"
+                                    role="switch"
+                                    aria-checked="false"
+                                    aria-disabled="false"
+                                    name
+                                    true-value="true"
+                                    false-value="false"
+                                    style="display: inline"
+                                    checked="True" />
+                            </div>
 
                             <div
                                 style="
@@ -107,14 +135,14 @@
                 ">
                                 <div class="div-font-box" id="submit-button">
                                     <button
-                                        class="btn"
-                                        type="submit"
-                                        style="background-color: #88c0d0">
-                                        run
+                                        class="btn_confirm"
+                                        type="submit">
+                                        confirm
                                     </button>
                                 </div>
                                 <div class="div-font-box" id="reset-button">
-                                    <button class="btn" type="reset">stop</button>
+                                    <button class="btn_reset"
+                                        type="reset">reset</button>
                                 </div>
                             </div>
                         </form>
@@ -122,26 +150,32 @@
                 </div>
                 <div>
                     <div>
+                        <h2>生成二维码</h2>
+                    </div>
+                    <div id="qr-box" class="qr-box"></div>
+                </div>
+                <div>
+                    <div>
                         <h2>运行状况</h2>
                     </div>
-                    <div id="qr-box" class="qr-box">
+                    <div id="msg-box" class="qr-box">
                         <h2>STOP</h2>
                     </div>
                 </div>
             </div>
 
             <!-- display-box -->
-            <!-- <div>
+            <div>
                 <div>
-                    <h2>认证结果</h2>
+                    <h2>认证日志</h2>
                 </div>
                 <div id="display-box" class="display-box"></div>
-            </div> -->
+            </div>
         </main>
 
         <footer>
             <div class="footer-bar-name">
-                <p class="footer-bar-name-text">2024</p>
+                <p class="footer-bar-name-text">© 2024 orgaworl</p>
             </div>
         </footer>
     </body>
