@@ -9,12 +9,14 @@ from common import supportEC
 
 helpMessage='''
 Usage:
-    python progServer.py [options]
+    python deviceControl.py [options]
 
 Options:
     --ip <ip>               Specify the IP address. (default "127.0.0.1")
     --port <port>           Specify the port.       (default "4398")
     --protocol <protocol>   Specify the protocol.   (default "kelapa")
+    --ec <curve>            Specify the elliptic curve. (default "Ed25519")
+    <--benchmark>           Record time cost.
     <--debug>               Print protocol parameters.
 '''
 

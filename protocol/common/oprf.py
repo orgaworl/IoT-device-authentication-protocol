@@ -35,6 +35,6 @@ class SM3HashComp:
         res=bytearray(16)
         for i in range(16):
             res[i]=data_hash[i]^data_hash[i+16]
-        assert(len(res),16)
+        #assert(len(res),16)
         return res.hex()
 

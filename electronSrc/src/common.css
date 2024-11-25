@@ -148,13 +148,18 @@ header li {
 /*----------------------------------------------------------*/
 body {
   background: rgb(100, 129, 205);
-  background: linear-gradient(
+  /* background: linear-gradient(
     29deg,
     rgba(100, 129, 205, 1) 0%,
     rgba(114, 187, 203, 1) 59%,
     rgba(0, 212, 255, 0.7399334733893557) 100%
+  ); */
+  background: linear-gradient(
+    29deg,
+    rgba(0, 212, 255, 0.7399334733893557) 0%,
+    rgba(114, 187, 203, 1) 59%,
+    rgba(100, 129, 205, 1)100%
   );
-
 
 }
 main {
