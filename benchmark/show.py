@@ -63,6 +63,8 @@ def plot_part01():
     bx.legend()
     bx.set_xticks(xlist)
 
+    
+    
 
     # pic03
     fig,bx=plt.subplots()
@@ -92,6 +94,17 @@ def plot_part01():
     bx.set_title('compare total time cost in different protocols')
     bx.set_xlabel('different elliptic curves (Brainpool-p<x>t1)')
     bx.set_ylabel('time cost(ms)')
+    bx.legend()
+    bx.set_xticks(xlist)
+
+    # pic10
+    fig,bx=plt.subplots()
+    bx.plot(xlist,100*(y21list/y11list),label="phase1",color="blueviolet",linestyle='-',marker='.')
+    bx.plot(xlist,100*(y22list/y12list),label="phase2",color="peachpuff",linestyle='-',marker='.')
+    bx.plot(xlist,100*((y21list+y22list)/(y11list+y12list)),label="total",color="cyan",linestyle='-',marker='.')
+    bx.set_title('compare efficiency of different protocols')
+    bx.set_xlabel('different elliptic curves (Brainpool-p<x>t1)')
+    bx.set_ylabel('time cost ratio(%)')
     bx.legend()
     bx.set_xticks(xlist)
 
@@ -154,7 +167,7 @@ def plot_part03():
     bx.set_xlabel('different device combinations (Ed25519)')
     bx.set_ylabel('time cost(ms)')
     bx.legend()
-# plot_part01()
+plot_part01()
 # plot_part02()
-plot_part03()
+#plot_part03()
 plt.show()

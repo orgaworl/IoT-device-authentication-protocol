@@ -57,22 +57,22 @@ def bench_mark(protocol,HOST: str, port: int,passwd:str,debug:bool=False,loopTim
     
 helpMessage='''
 Usage:
-    python progClient.py [options]
+    python deviceIoT.py [options]
 
 Options:
     --ip <ip>               Specify the IP address. (default "127.0.0.1")
     --port <port>           Specify the port.       (default "4398")
-    --passwd <password>     Specify the password.   (defalut "passwd")
     --protocol <protocol>   Specify the protocol.   (default "kelapa")
+    --ec <curve>            Specify the elliptic curve. (default "Ed25519")
     <--benchmark>           Record time cost.
     <--debug>               Print running details.
     
 Examples:
     # run protocol for local test.
-    python progClient.py  
+    python deviceIoT.py 
     
     # run protocol with another device in the same LAN whose IP address is 192.168.31.100 .
-    python progClient.py --ip 192.168.31.100
+    python deviceIoT.py --ip 192.168.31.100
 '''
 
 if __name__ == '__main__':
